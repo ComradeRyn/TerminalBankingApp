@@ -4,7 +4,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        
+        MainMenu.start();
     }
 }
 
@@ -42,20 +42,22 @@ public class Account
 public class AccountManager
 {
     //Holds all Bank Accounts
-    private static List<Account> accounts = new List<Account>();
+    private List<Account> accounts = new List<Account>();
     
     //Retrieves an account based off requested id
-    public static Account? GetAccount(string id)
+    public Account? GetAccount(string id)
     {
         //TODO: what happens when the returned value is null
         return accounts.FirstOrDefault(account => account.Id.ToString() == id, null);
     }
 
-    //Creates account with provided name
-    public static void CreateAccount(string name)
+    //Creates account with provided name and returns the newly created account
+    public Account CreateAccount(string name)
     {
         Account newAccount = new Account(name);
         accounts.Add(newAccount);
+
+        return newAccount;
     }
     
 }
@@ -120,5 +122,119 @@ public class WithdrawRequest : IRequest
 
         selectedAccount.WithdrawFunds(withdrawAmount);
         return $"Successfully withdrew {withdrawAmount}. \n New Balance: {selectedAccount.Balance}";
+    }
+}
+
+//Creates an account and ports the results
+public class AccountCreationRequest : IRequest
+{
+    private AccountManager accountManager;
+    private string accountName;
+
+    public AccountCreationRequest(AccountManager manager, string name)
+    {
+        accountName = name;
+        accountManager = manager;
+    }
+
+    public string PreformRequest()
+    {
+        Account newAccount = accountManager.CreateAccount(accountName);
+        return $"Account successfully created under {accountName} with Id of {newAccount.Id}";
+    }
+}
+
+//Generated when an invalid input is passed in main menu
+public class InvalidRequest : IRequest
+{
+    public string PreformRequest()
+    {
+        return $"Invalid input";
+    }
+}
+
+//Generated when menu is exited
+public class ExitRequest : IRequest
+{
+    public string PreformRequest()
+    {
+        return $"Exit Confirmed: Have a nice day!";
+    }
+}
+
+public class MainMenu
+{
+    //Need to complete each of these methods
+    private static IRequest Deposit()
+    {
+        return new ExitRequest();
+    }
+
+    private static IRequest Withdraw()
+    {
+        return new ExitRequest();
+    }
+
+    private static IRequest Transfer()
+    {
+        return new ExitRequest();
+    }
+
+    private static IRequest Create()
+    {
+        return new ExitRequest();
+    }
+
+    private static IRequest CheckBalance()
+    {
+        return new ExitRequest();
+    }
+
+    public static void start()
+    {
+        Console.WriteLine("\nWelcome to my Terminal Banking App! Please select one of the following numbers for the corresponding option:");
+        string input;
+        bool continueRunning = true;
+        do
+        {
+            Console.WriteLine("1: Create Account \n2: Make a Deposit \n3: Make a Withdraw \n4: Check an account balance \n5: Transfer Funds \n9: exit");
+            
+            input = Console.ReadLine();
+            IRequest request;
+
+            switch (input)
+            {
+                case "1":
+                    Console.WriteLine("This will create an account!");
+                    request = Deposit();
+                    break;
+                case "2":
+                    Console.WriteLine("This will make a deposit!");
+                    request = Withdraw();
+                    break;
+                case "3":
+                    Console.WriteLine("This will make a withdraw!");
+                    request = Transfer();
+                    break;
+                case "4":
+                    Console.WriteLine("This will check an account balance!");
+                    request = Create();
+                    break;
+                case "5":
+                    Console.WriteLine("This will make an account transfer!");
+                    request = CheckBalance();
+                    break;
+                case "9":
+                    request = new ExitRequest();
+                    continueRunning = false;
+                    break;
+                default:
+                    request = new InvalidRequest();
+                    break;
+            }
+
+            string requestCompletionMessage = request.PreformRequest();
+            Console.WriteLine(requestCompletionMessage);
+        } while (continueRunning);
     }
 }
