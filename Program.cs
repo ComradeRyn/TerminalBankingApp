@@ -14,9 +14,9 @@ public class Account
     //ID which will be used whenever a new Account is created
     public Guid Id { get; init; }
 
-    public string HolderName { get; private set; }
+    public string HolderName { get; init; }
 
-    public decimal Balance { get; private set; }
+    public decimal Balance { get; set; }
 
     //Initializes all data and increments the unique ID value for the next account
     public Account(string name)
@@ -66,28 +66,59 @@ public interface IRequest
     public string PreformRequest();
 }
 
-// public class DepositRequest : IRequest
-// {
-//     private Account selectedAccount;
-//     private decimal depositAmount;
-//
-//     public DepositRequest(Account account, decimal amount)
-//     {
-//         selectedAccount = account;
-//         depositAmount = amount;
-//     }
-//     private bool ValidateAmount()
-//     {
-//         
-//     }
-//
-//     private void DepositFunds()
-//     {
-//         
-//     }
-//
-//     public string PreformRequest()
-//     {
-//         return null;
-//     }
-// }
+//Attempts to deposit requested amount of money and reports result
+public class DepositRequest : IRequest
+{
+    private Account selectedAccount;
+    private decimal depositAmount;
+
+    public DepositRequest(Account account, decimal amount)
+    {
+        selectedAccount = account;
+        depositAmount = amount;
+    }
+    public bool ValidateAmount()
+    {
+        return depositAmount > 0;
+    }
+
+    public string PreformRequest()
+    {
+        if (!ValidateAmount())
+        {
+            return "Action failed: Deposit amount must be positive";
+        }
+
+        selectedAccount.DepositFunds(depositAmount);
+        return $"Successfully deposited {depositAmount}. \n New Balance: {selectedAccount.Balance}";
+    }
+}
+
+//Attempts to withdraw requested amount of money and reports result
+public class WithdrawRequest : IRequest
+{
+    private Account selectedAccount;
+    private decimal withdrawAmount;
+
+    public WithdrawRequest(Account account, decimal amount)
+    {
+        selectedAccount = account;
+        withdrawAmount = amount;
+    }
+
+    public bool ValidateAmount()
+    {
+        return withdrawAmount > 0 && withdrawAmount <= selectedAccount.Balance;
+    }
+
+    public string PreformRequest()
+    {
+        if (!ValidateAmount())
+        {
+            return "Action failed: Withdraw amount must be positive and less than or equal to your Balance!";
+        }
+
+        selectedAccount.WithdrawFunds(withdrawAmount);
+        return $"Successfully withdrew {withdrawAmount}. \n New Balance: {selectedAccount.Balance}";
+    }
+}
