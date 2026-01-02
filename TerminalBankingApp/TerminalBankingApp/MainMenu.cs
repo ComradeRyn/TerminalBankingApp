@@ -109,6 +109,7 @@ public class MainMenu
         if (parseSucessful)
         {
             var request = new DepositRequest(retrievedAccount, retrievedAmount);
+            Console.WriteLine(request.PerformRequest());
         }
     }
 
