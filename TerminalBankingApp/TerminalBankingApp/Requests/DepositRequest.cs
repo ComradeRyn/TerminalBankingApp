@@ -1,31 +1,26 @@
 ﻿namespace TerminalBankingApp.Requests;
 
-//Attempts to deposit requested amount of money and reports result
 public class DepositRequest : IRequest
 {
-    private Account selectedAccount;
-    private decimal depositAmount;
+    private readonly Account _selectedAccount;
+    private readonly decimal _depositAmount;
 
     public DepositRequest(Account account, decimal amount)
     {
-        selectedAccount = account;
-        depositAmount = amount;
+        _selectedAccount = account;
+        _depositAmount = amount;
     }
-    //Validates if the amount is possitive
     public bool ValidateAmount()
-    {
-        return depositAmount > 0;
-    }
+        => _depositAmount > 0;
     
-    //If input is valid, deposit money and report back results
-    public string PreformRequest()
+    public string PerformRequest()
     {
         if (!ValidateAmount())
         {
             return "Action failed: Deposit amount must be positive";
         }
 
-        selectedAccount.DepositFunds(depositAmount);
-        return $"Successfully deposited ${depositAmount.ToString("F2")}. \nNew Balance: ${selectedAccount.Balance.ToString("F2")}";
+        _selectedAccount.UpdateBalance(_depositAmount);
+        return $"Successfully deposited ${_depositAmount:F2}. \nNew Balance: ${_selectedAccount.Balance:F2}";
     }
 }

@@ -1,36 +1,31 @@
 ﻿namespace TerminalBankingApp.Requests;
 
-//Attempts to preform a transfer, then reports the results
 public class TransferRequest : IRequest
 {
-    private DepositRequest recipient;
-    private WithdrawRequest sender;
-    private decimal amount;
+    private readonly DepositRequest _recipient;
+    private readonly WithdrawRequest _sender;
+    private readonly decimal _amount;
 
     public TransferRequest(Account recipientAccount, Account senderAccount, decimal amount)
     {
-        this.amount = amount;
-        recipient = new DepositRequest(recipientAccount, amount);
-        sender = new WithdrawRequest(senderAccount, amount);
-    }
-
-    //Checks if boths requests are valid
-    private bool ValidateRequest()
-    {
-        return recipient.ValidateAmount() && sender.ValidateAmount();
+        _amount = amount;
+        _recipient = new DepositRequest(recipientAccount, amount);
+        _sender = new WithdrawRequest(senderAccount, amount);
     }
     
-    //Varifies the transfer and if legal, performs it then reports results
-    public string PreformRequest()
+    private bool ValidateRequest()
+        => _recipient.ValidateAmount() && _sender.ValidateAmount();
+    
+    public string PerformRequest()
     {
         if (!ValidateRequest())
         {
             return $"Transfer failed: Transfer amount must be positive and within limits of sender's account.";
         }
 
-        recipient.PreformRequest();
-        sender.PreformRequest();
+        _recipient.PerformRequest();
+        _sender.PerformRequest();
 
-        return $"Successfully transfered ${amount.ToString("F2")}.";
+        return $"Successfully transferred ${_amount:F2}.";
     }
 }

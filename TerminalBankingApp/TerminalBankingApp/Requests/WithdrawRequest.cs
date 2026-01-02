@@ -1,32 +1,27 @@
 ﻿namespace TerminalBankingApp.Requests;
 
-//Attempts to withdraw requested amount of money and reports result
 public class WithdrawRequest : IRequest
 {
-    private Account selectedAccount;
-    private decimal withdrawAmount;
+    private readonly Account _selectedAccount;
+    private readonly decimal _withdrawAmount;
 
     public WithdrawRequest(Account account, decimal amount)
     {
-        selectedAccount = account;
-        withdrawAmount = amount;
+        _selectedAccount = account;
+        _withdrawAmount = amount;
     }
-
-    //Checks if amount is possitive and if the requested amount is less than or equal to the user account balance
+    
     public bool ValidateAmount()
-    {
-        return withdrawAmount > 0 && withdrawAmount <= selectedAccount.Balance;
-    }
-
-    //Validates input withdraws amount if valid. Reports results back
-    public string PreformRequest()
+        => _withdrawAmount > 0 && _withdrawAmount <= _selectedAccount.Balance;
+    
+    public string PerformRequest()
     {
         if (!ValidateAmount())
         {
             return "Action failed: Withdraw amount must be positive and less than or equal to your Balance!";
         }
 
-        selectedAccount.WithdrawFunds(withdrawAmount);
-        return $"Successfully withdrew ${withdrawAmount.ToString("F2")}. \nNew Balance: ${selectedAccount.Balance.ToString("F2")}";
+        _selectedAccount.UpdateBalance(_withdrawAmount * -1);
+        return $"Successfully withdrew ${_withdrawAmount:F2}. \nNew Balance: ${_selectedAccount.Balance:F2}";
     }
 }

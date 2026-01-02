@@ -1,21 +1,19 @@
 ﻿namespace TerminalBankingApp.Requests;
 
-//Creates an account and reports the results
 public class AccountCreationRequest : IRequest
 {
-    private AccountManager accountManager;
-    private string accountName;
+    private readonly AccountManager _accountManager;
+    private readonly string _accountName;
 
     public AccountCreationRequest(AccountManager manager, string name)
     {
-        accountName = name;
-        accountManager = manager;
+        _accountName = name;
+        _accountManager = manager;
     }
-
-    //Creates account and reports results back
-    public string PreformRequest()
+    
+    public string PerformRequest()
     {
-        Account newAccount = accountManager.CreateAccount(accountName);
-        return $"Account successfully created under {accountName} with Id of {newAccount.Id}";
+        var newAccount = _accountManager.CreateAccount(_accountName);
+        return $"Account successfully created under {_accountName} with Id of {newAccount.Id}";
     }
 }
