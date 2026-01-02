@@ -10,6 +10,20 @@ public class AccountCreationRequest : IRequest
         _accountName = name;
         _accountManager = manager;
     }
+
+    public bool ValidateName()
+    {
+        var nameTokens = _accountName.Split(" ");
+        foreach (var name in nameTokens)
+        {
+            if (!name.All(char.IsLetter) || name == "")
+            {
+                return false; 
+            }
+        }
+
+        return true;
+    }
     
     public string PerformRequest()
     {

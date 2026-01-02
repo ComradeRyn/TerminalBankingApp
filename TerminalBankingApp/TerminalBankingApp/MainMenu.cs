@@ -24,53 +24,57 @@ public class MainMenu
             
             input = Console.ReadLine();
             
-            IRequest request;
-            
             switch (input)
             {
                 case "1":
-                    request = Create(accountManager);
+                    Create(accountManager);
                     break;
                 case "2":
-                    request = Deposit(accountManager);
+                    Deposit(accountManager);
                     break;
                 case "3":
-                    request = Withdraw(accountManager);
+                    Withdraw(accountManager);
                     break;
                 case "4":
-                    request = CheckBalance(accountManager);
+                    CheckBalance(accountManager);
                     break;
                 case "5":
-                    request = Transfer(accountManager);
+                    Transfer(accountManager);
                     break;
                 case "9":
-                    request = new ExitRequest();
+                    Console.WriteLine("Exit Confirmed: Have a nice day!");
                     continueRunning = false;
                     break;
                 default:
-                    request = new InvalidRequest();
+                    Console.WriteLine("Not a valid command");
                     break;
             }
-            
-            var requestCompletionMessage = request.PerformRequest();
-            Console.WriteLine("\n" + requestCompletionMessage + "\n");
-            
         } while (continueRunning);
     }
     private static bool ParseAccount(AccountManager manager, out Account? retrievedAccount)
     {
-        Console.Write("Enter account ID: ");
-        var inputtedId = Console.ReadLine();
+        string inputtedId;
+        do
+        {
+            Console.Write("Enter account ID: ");
+            inputtedId = Console.ReadLine();
 
-        retrievedAccount = manager.GetAccount(inputtedId);
+            retrievedAccount = manager.GetAccount(inputtedId);
+        } while (retrievedAccount is null && inputtedId != "exit");
+        
 
         return retrievedAccount is not null;
     }
     
     private static bool ParseAmount(out decimal amount)
     {
-        Console.Write("Enter a money amount: ");
-        var inputtedAmount = Console.ReadLine();
+        string inputtedAmount;
+        do
+        {
+            Console.Write("Enter a money amount: ");
+            inputtedAmount = Console.ReadLine();
+        } while (!decimal.TryParse(inputtedAmount, out amount) && inputtedAmount != "exit");
+        
 
         return decimal.TryParse(inputtedAmount, out amount);
     }
@@ -91,27 +95,12 @@ public class MainMenu
 
         return amountSuccessful;
     }
+
     
-    private static IRequest Deposit(AccountManager manager)
+    private static void Deposit(AccountManager manager)
     {
-        Account? retrievedAccount;
-        decimal retrievedAmount;
+        Console.WriteLine("type \"exit\" to return back to main menu");
         
-        var parseSucessful = ParseAccountAndAmount(manager, out retrievedAccount, out retrievedAmount);
-        
-        if (parseSucessful)
-        {
-            return new DepositRequest(retrievedAccount, retrievedAmount);
-        }
-        
-        else
-        {
-            return new InvalidRequest();
-        }
-    }
-
-    private static IRequest Withdraw(AccountManager manager)
-    {
         Account? retrievedAccount;
         decimal retrievedAmount;
 
@@ -119,17 +108,30 @@ public class MainMenu
 
         if (parseSucessful)
         {
-            return new WithdrawRequest(retrievedAccount, retrievedAmount);
-        }
-        
-        else
-        {
-            return new InvalidRequest();
+            var request = new DepositRequest(retrievedAccount, retrievedAmount);
         }
     }
 
-    private static IRequest Transfer(AccountManager manager)
+    private static void Withdraw(AccountManager manager)
     {
+        Console.WriteLine("type \"exit\" to return back to main menu");
+        
+        Account? retrievedAccount;
+        decimal retrievedAmount;
+
+        var parseSucessful = ParseAccountAndAmount(manager, out retrievedAccount, out retrievedAmount);
+
+        if (parseSucessful)
+        {
+            var request = new WithdrawRequest(retrievedAccount, retrievedAmount);
+            Console.WriteLine(request.PerformRequest());
+        }
+    }
+
+    private static void Transfer(AccountManager manager)
+    {
+        Console.WriteLine("type \"exit\" to return back to main menu");
+        
         Account? sender;
         Account? receiver;
         decimal amount;
@@ -140,7 +142,7 @@ public class MainMenu
         
         if (!firstParseSuccessful)
         {
-            return new InvalidRequest();
+            return;
         }
 
         Console.WriteLine("Receiving account");
@@ -148,31 +150,46 @@ public class MainMenu
 
         if (!secondParseSuccessful)
         {
-            return new InvalidRequest();
+            return;
         }
 
-        return new TransferRequest(receiver, sender, amount);
+        var request = new TransferRequest(receiver, sender, amount);
+        Console.WriteLine(request.PerformRequest());
     }
 
-    private static IRequest Create(AccountManager manager)
+    private static void Create(AccountManager manager)
     {
-        Console.Write("Enter the name of the account holder: ");
-        var holderName = Console.ReadLine();
-        return new AccountCreationRequest(manager, holderName);
+        Console.WriteLine("type \"exit\" to return back to main menu");
+        Console.WriteLine("Names should only be composed of letters in format of <first name> <second name> <...> <last name>");
+        
+        AccountCreationRequest request;
+        do
+        {
+            Console.Write("Enter the name of the account holder: ");
+            var holderName = Console.ReadLine();
+            request = new AccountCreationRequest(manager, holderName);
+
+            if (holderName == "exit")
+            {
+                return;
+            }
+            
+        } while (!request.ValidateName());
+            
+        Console.WriteLine(request.PerformRequest());
     }
 
-    private static IRequest CheckBalance(AccountManager manager)
+    private static void CheckBalance(AccountManager manager)
     {
+        Console.WriteLine("type \"exit\" to return back to main menu");
+        
         Account? inputtedAccount;
         var parseSuccessful = ParseAccount(manager, out inputtedAccount);
 
         if (parseSuccessful)
         {
-            return new CheckBalanceRequest(inputtedAccount);
-        }
-        else
-        {
-            return new InvalidRequest();
+            var request = new CheckBalanceRequest(inputtedAccount);
+            Console.WriteLine(request.PerformRequest());
         }
     }
 }
