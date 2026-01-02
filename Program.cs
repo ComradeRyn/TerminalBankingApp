@@ -4,6 +4,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        //Run the program
         MainMenu.start();
     }
 }
@@ -42,12 +43,16 @@ public class Account
 public class AccountManager
 {
     //Holds all Bank Accounts
-    private List<Account> accounts = new List<Account>();
+    private List<Account> accounts;
+
+    public AccountManager()
+    {
+        accounts = new List<Account>();
+    }
     
     //Retrieves an account based off requested id
     public Account? GetAccount(string id)
     {
-        //TODO: what happens when the returned value is null
         return accounts.FirstOrDefault(account => account.Id.ToString() == id, null);
     }
 
@@ -92,7 +97,7 @@ public class DepositRequest : IRequest
         }
 
         selectedAccount.DepositFunds(depositAmount);
-        return $"Successfully deposited {depositAmount}. \n New Balance: {selectedAccount.Balance}";
+        return $"Successfully deposited ${depositAmount}. \n New Balance: ${selectedAccount.Balance}";
     }
 }
 
@@ -121,11 +126,46 @@ public class WithdrawRequest : IRequest
         }
 
         selectedAccount.WithdrawFunds(withdrawAmount);
-        return $"Successfully withdrew {withdrawAmount}. \n New Balance: {selectedAccount.Balance}";
+        return $"Successfully withdrew ${withdrawAmount}. \n New Balance: ${selectedAccount.Balance}";
     }
 }
 
-//Creates an account and ports the results
+//Attempts to preform a transfer, then reports the results
+public class TransferRequest : IRequest
+{
+    private DepositRequest recipient;
+    private WithdrawRequest sender;
+    private decimal amount;
+
+    public TransferRequest(Account recipientAccount, Account senderAccount, decimal amount)
+    {
+        this.amount = amount;
+        recipient = new DepositRequest(recipientAccount, amount);
+        sender = new WithdrawRequest(senderAccount, amount);
+    }
+
+    //Checks if boths requests are valid
+    private bool ValidateRequest()
+    {
+        return recipient.ValidateAmount() && sender.ValidateAmount();
+    }
+    
+    //Varifies the transfer and if legal, performs it
+    public string PreformRequest()
+    {
+        if (!ValidateRequest())
+        {
+            return $"Transfer failed: Transfer amount must be positive and within limits of sender's account.";
+        }
+
+        recipient.PreformRequest();
+        sender.PreformRequest();
+
+        return $"Successfully transfered ${amount}.";
+    }
+}
+
+//Creates an account and reports the results
 public class AccountCreationRequest : IRequest
 {
     private AccountManager accountManager;
@@ -141,6 +181,22 @@ public class AccountCreationRequest : IRequest
     {
         Account newAccount = accountManager.CreateAccount(accountName);
         return $"Account successfully created under {accountName} with Id of {newAccount.Id}";
+    }
+}
+
+//Reports the Balance of the requested account
+public class CheckBalanceRequest : IRequest
+{
+    private Account selectedAccount;
+
+    public CheckBalanceRequest(Account account)
+    {
+        selectedAccount = account;
+    }
+
+    public string PreformRequest()
+    {
+        return $"Account Balance of ${selectedAccount.Balance}.";
     }
 }
 
@@ -162,32 +218,148 @@ public class ExitRequest : IRequest
     }
 }
 
+//Gathers userinput and responds accordingly
 public class MainMenu
 {
-    //Need to complete each of these methods
-    private static IRequest Deposit()
+    //Parse the inputted acount and return if succesful or not
+    private static bool ParseAccount(AccountManager manager, out Account? retrievedAccount)
     {
-        return new ExitRequest();
+        //Read input and retrieve the account
+        Console.Write("Enter account ID: ");
+        string? inputtedID = Console.ReadLine();
+
+        retrievedAccount = manager.GetAccount(inputtedID);
+
+        //If the given account does not exist, return that the request was invalid
+        if (retrievedAccount == null)
+        {
+            return false;
+        }
+
+        return true;
     }
 
-    private static IRequest Withdraw()
+    //Parse the inputted amount and return if succesful or not
+    private static bool ParseAmount(out decimal amount)
     {
-        return new ExitRequest();
+        //Gets the amount from the user1
+        Console.Write("Enter a money amount: ");
+        string inputtedAmount = Console.ReadLine();
+        
+        //If input valid, go through with request
+        if (decimal.TryParse(inputtedAmount, out amount))
+        {
+            return true;
+        }
+        
+        //If not, request is invalid
+        else
+        {
+            return false;
+        }
     }
 
-    private static IRequest Transfer()
+    //Parses an inputted ID and amount and returns if it was successful or not
+    private static bool ParseAccountAndAmount(AccountManager manager, out Account? retrievedAccount, out decimal amount)
     {
-        return new ExitRequest();
+        //Check if inputted account exists
+        bool AccountSuccessful = ParseAccount(manager, out retrievedAccount);
+
+        //If not, end prematurly
+        if (!AccountSuccessful)
+        {
+            amount = 0;
+            return false;
+        }
+
+        //Check if the inputted amount is formated correctly
+        bool AmountSuccessful = ParseAmount(out amount);
+
+        return AmountSuccessful;
+    }
+    
+    private static IRequest Deposit(AccountManager manager)
+    {
+        Account? retrievedAccount;
+        decimal retrievedAmount;
+        
+        bool parseSucessful = ParseAccountAndAmount(manager, out retrievedAccount, out retrievedAmount);
+        
+        if (parseSucessful)
+        {
+            return new DepositRequest(retrievedAccount, retrievedAmount);
+        }
+        
+        else
+        {
+            return new InvalidRequest();
+        }
     }
 
-    private static IRequest Create()
+    private static IRequest Withdraw(AccountManager manager)
     {
-        return new ExitRequest();
+        Account? retrievedAccount;
+        decimal retrievedAmount;
+
+        bool parseSucessful = ParseAccountAndAmount(manager, out retrievedAccount, out retrievedAmount);
+
+        if (parseSucessful)
+        {
+            return new WithdrawRequest(retrievedAccount, retrievedAmount);
+        }
+        
+        else
+        {
+            return new InvalidRequest();
+        }
     }
 
-    private static IRequest CheckBalance()
+    private static IRequest Transfer(AccountManager manager)
     {
-        return new ExitRequest();
+        Account? sender;
+        Account? reciever;
+        decimal amount;
+        
+        Console.WriteLine("Sending account and amount");
+
+        bool firstParseSuccessful = ParseAccountAndAmount(manager, out sender, out amount);
+        
+        if (!firstParseSuccessful)
+        {
+            return new InvalidRequest();
+        }
+
+        Console.WriteLine("Recieving account");
+        bool secondParseSuccessful = ParseAccount(manager, out reciever);
+
+        if (!secondParseSuccessful)
+        {
+            return new InvalidRequest();
+        }
+
+        return new TransferRequest(reciever, sender, amount);
+    }
+
+    private static IRequest Create(AccountManager manager)
+    {
+        Console.Write("Enter the name of the account holder: ");
+        string holderName = Console.ReadLine();
+        return new AccountCreationRequest(manager, holderName);
+    }
+
+    private static IRequest CheckBalance(AccountManager manager)
+    {
+        Account? inputtedAccount;
+        bool parseSuccessful = ParseAccount(manager, out inputtedAccount);
+
+        if (parseSuccessful)
+        {
+            return new CheckBalanceRequest(inputtedAccount);
+        }
+        else
+        {
+            return new InvalidRequest();
+        }
     }
 
     public static void start()
@@ -195,6 +367,7 @@ public class MainMenu
         Console.WriteLine("\nWelcome to my Terminal Banking App! Please select one of the following numbers for the corresponding option:");
         string input;
         bool continueRunning = true;
+        AccountManager accoutManager = new AccountManager();
         do
         {
             Console.WriteLine("1: Create Account \n2: Make a Deposit \n3: Make a Withdraw \n4: Check an account balance \n5: Transfer Funds \n9: exit");
@@ -206,23 +379,23 @@ public class MainMenu
             {
                 case "1":
                     Console.WriteLine("This will create an account!");
-                    request = Deposit();
+                    request = Create(accoutManager);
                     break;
                 case "2":
                     Console.WriteLine("This will make a deposit!");
-                    request = Withdraw();
+                    request = Deposit(accoutManager);
                     break;
                 case "3":
                     Console.WriteLine("This will make a withdraw!");
-                    request = Transfer();
+                    request = Withdraw(accoutManager);
                     break;
                 case "4":
                     Console.WriteLine("This will check an account balance!");
-                    request = Create();
+                    request = CheckBalance(accoutManager);
                     break;
                 case "5":
                     Console.WriteLine("This will make an account transfer!");
-                    request = CheckBalance();
+                    request = Transfer(accoutManager);
                     break;
                 case "9":
                     request = new ExitRequest();
@@ -235,6 +408,7 @@ public class MainMenu
 
             string requestCompletionMessage = request.PreformRequest();
             Console.WriteLine(requestCompletionMessage);
+            
         } while (continueRunning);
     }
 }
