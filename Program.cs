@@ -84,11 +84,13 @@ public class DepositRequest : IRequest
         selectedAccount = account;
         depositAmount = amount;
     }
+    //Validates if the amount is possitive
     public bool ValidateAmount()
     {
         return depositAmount > 0;
     }
-
+    
+    //If input is valid, deposit money and report back results
     public string PreformRequest()
     {
         if (!ValidateAmount())
@@ -97,7 +99,7 @@ public class DepositRequest : IRequest
         }
 
         selectedAccount.DepositFunds(depositAmount);
-        return $"Successfully deposited ${depositAmount}. \n New Balance: ${selectedAccount.Balance}";
+        return $"Successfully deposited ${depositAmount.ToString("F2")}. \nNew Balance: ${selectedAccount.Balance.ToString("F2")}";
     }
 }
 
@@ -113,11 +115,13 @@ public class WithdrawRequest : IRequest
         withdrawAmount = amount;
     }
 
+    //Checks if amount is possitive and if the requested amount is less than or equal to the user account balance
     public bool ValidateAmount()
     {
         return withdrawAmount > 0 && withdrawAmount <= selectedAccount.Balance;
     }
 
+    //Validates input withdraws amount if valid. Reports results back
     public string PreformRequest()
     {
         if (!ValidateAmount())
@@ -126,7 +130,7 @@ public class WithdrawRequest : IRequest
         }
 
         selectedAccount.WithdrawFunds(withdrawAmount);
-        return $"Successfully withdrew ${withdrawAmount}. \n New Balance: ${selectedAccount.Balance}";
+        return $"Successfully withdrew ${withdrawAmount.ToString("F2")}. \nNew Balance: ${selectedAccount.Balance.ToString("F2")}";
     }
 }
 
@@ -150,7 +154,7 @@ public class TransferRequest : IRequest
         return recipient.ValidateAmount() && sender.ValidateAmount();
     }
     
-    //Varifies the transfer and if legal, performs it
+    //Varifies the transfer and if legal, performs it then reports results
     public string PreformRequest()
     {
         if (!ValidateRequest())
@@ -161,7 +165,7 @@ public class TransferRequest : IRequest
         recipient.PreformRequest();
         sender.PreformRequest();
 
-        return $"Successfully transfered ${amount}.";
+        return $"Successfully transfered ${amount.ToString("F2")}.";
     }
 }
 
@@ -177,6 +181,7 @@ public class AccountCreationRequest : IRequest
         accountManager = manager;
     }
 
+    //Creates account and reports results back
     public string PreformRequest()
     {
         Account newAccount = accountManager.CreateAccount(accountName);
@@ -194,24 +199,27 @@ public class CheckBalanceRequest : IRequest
         selectedAccount = account;
     }
 
+    //Returns the amount left in the inputted account
     public string PreformRequest()
     {
-        return $"Account Balance of ${selectedAccount.Balance}.";
+        return $"Account Balance of ${selectedAccount.Balance.ToString("F2")}.";
     }
 }
 
 //Generated when an invalid input is passed in main menu
 public class InvalidRequest : IRequest
 {
+    //Reports that request was invalid
     public string PreformRequest()
     {
-        return $"Invalid input";
+        return "Invalid input";
     }
 }
 
 //Generated when menu is exited
 public class ExitRequest : IRequest
 {
+    //Reports that exit was confirmed
     public string PreformRequest()
     {
         return $"Exit Confirmed: Have a nice day!";
@@ -278,6 +286,7 @@ public class MainMenu
         return AmountSuccessful;
     }
     
+    //Series of methods with preform the respective function they are named after
     private static IRequest Deposit(AccountManager manager)
     {
         Account? retrievedAccount;
@@ -362,19 +371,26 @@ public class MainMenu
         }
     }
 
+    //The enter point to the program
     public static void start()
     {
         Console.WriteLine("\nWelcome to my Terminal Banking App! Please select one of the following numbers for the corresponding option:");
+        
         string input;
         bool continueRunning = true;
         AccountManager accoutManager = new AccountManager();
+        
         do
         {
             Console.WriteLine("1: Create Account \n2: Make a Deposit \n3: Make a Withdraw \n4: Check an account balance \n5: Transfer Funds \n9: exit");
             
+            //Reads the inital user input
             input = Console.ReadLine();
+            
+            //A request that will be populated by the switch statement, and excuted afterwards
             IRequest request;
 
+            //switch case that handles the inital user input
             switch (input)
             {
                 case "1":
@@ -406,8 +422,9 @@ public class MainMenu
                     break;
             }
 
+            //Preform the given request, and print the results from it
             string requestCompletionMessage = request.PreformRequest();
-            Console.WriteLine(requestCompletionMessage);
+            Console.WriteLine("\n" + requestCompletionMessage + "\n");
             
         } while (continueRunning);
     }
