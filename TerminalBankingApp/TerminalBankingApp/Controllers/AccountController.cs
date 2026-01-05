@@ -44,9 +44,13 @@ public class AccountController
         return false;
     }
     
-    // TODO: Make name validation built into this method
-    public Account CreateAccount(string name)
+    public Account? CreateAccount(string name)
     {
+        if (!ValidateName(name))
+        {
+            return null;
+        }
+        
         var newAccount = new Account(name);
         _accounts.Add(newAccount);
 
@@ -75,4 +79,10 @@ public class AccountController
     
     private Account? GetAccount(string id) 
         => _accounts.FirstOrDefault(account => account.Id.ToString() == id);
+    
+    private bool ValidateName(string accountName)
+    {
+        var nameTokens = accountName.Split(" ");
+        return nameTokens.All(name => name.All(char.IsLetter) && name != "");
+    }
 }
