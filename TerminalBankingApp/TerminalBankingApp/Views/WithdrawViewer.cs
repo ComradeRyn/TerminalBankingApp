@@ -2,5 +2,8 @@
 
 public class WithdrawViewer
 {
-    
+    public static void WithdrawView()
+    {
+        
+    }
 }

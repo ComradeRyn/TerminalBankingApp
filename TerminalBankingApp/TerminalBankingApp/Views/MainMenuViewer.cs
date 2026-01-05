@@ -6,7 +6,7 @@ public static class MainMenuViewer
 {
     // Is this correct practice?
     // Should I make a static controller, or should I make a controller that is passed between each of the viewers?
-    static AccountController controller = new AccountController();
+    public static AccountController Controller = new AccountController();
     
     public static void Start()
     {
@@ -29,16 +29,16 @@ public static class MainMenuViewer
             switch (input)
             {
                 case "1":
-                    //Create(accountManager);
+                    CreateAccountViewer.CreateAccountView();
                     break;
                 case "2":
-                    //Deposit(accountManager);
+                    DepositViewer.DepositView();
                     break;
                 case "3":
-                    //Withdraw(accountManager);
+                    WithdrawViewer.WithdrawView();
                     break;
                 case "4":
-                   //CheckBalance(accountManager);
+                   CheckAccountBalanceViewer.CheckAccountBalanceView();
                     break;
                 case "5":
                     //Transfer(accountManager);
@@ -64,13 +64,18 @@ public static class MainMenuViewer
         return inputtedId;
     }
 
-    public static decimal ParseAmount()
+    public static decimal? ParseAmount()
     {
         decimal amount;
 
         Console.Write("Enter a money amount: ");
+        
         var inputtedAmount = Console.ReadLine();
-        decimal.TryParse(inputtedAmount, out amount);
+        
+        if (inputtedAmount == "exit" || !decimal.TryParse(inputtedAmount, out amount))
+        {
+            return null;
+        }
 
         return amount;
     }
