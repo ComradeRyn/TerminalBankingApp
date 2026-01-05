@@ -2,11 +2,14 @@
 
 namespace TerminalBankingApp.Views;
 
-public static class MainMenuViewer
+public static class MainMenuView
 {
-    // Is this correct practice?
-    // Should I make a static controller, or should I make a controller that is passed between each of the viewers?
-    public static AccountController Controller = new AccountController();
+    // TODO: Switch out the uses of the AccountController with the AccountManagerController
+    // TODO: Check on naming conventions and syntax
+    // will need to make different instances of AccountControllers within each call to allow access to the controllers
+    
+    //public static AccountController Controller = new AccountController();
+    public static AccountManagerController ManagerController = new AccountManagerController();
     
     public static void Start()
     {
@@ -29,19 +32,19 @@ public static class MainMenuViewer
             switch (input)
             {
                 case "1":
-                    CreateAccountViewer.CreateAccountView();
+                    CreateAccountView.CreateAccountView();
                     break;
                 case "2":
-                    DepositViewer.DepositView();
+                    DepositView.DepositView();
                     break;
                 case "3":
-                    WithdrawViewer.WithdrawView();
+                    WithdrawView.WithdrawView();
                     break;
                 case "4":
                    CheckAccountBalanceViewer.CheckAccountBalanceView();
                     break;
                 case "5":
-                    TransferFundsViewer.TransferFundsView();
+                    TransferFundsView.TransferFundsView();
                     break;
                 case "9":
                     Console.WriteLine("Exit Confirmed: Have a nice day!");

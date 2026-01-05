@@ -10,8 +10,8 @@ public class CheckAccountBalanceViewer
 
         while (accountBalance == -1)
         {
-            inputtedAccount = MainMenuViewer.ParseAccount();
-            accountBalance = MainMenuViewer.Controller.CheckBalance(inputtedAccount);
+            inputtedAccount = MainMenuView.ParseAccount();
+            accountBalance = MainMenuView.Controller.CheckBalance(inputtedAccount);
 
             if (inputtedAccount == "exit")
             {

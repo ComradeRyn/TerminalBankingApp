@@ -1,8 +1,8 @@
 ﻿namespace TerminalBankingApp.Views;
 
-public class DepositViewer
+public class DepositView
 {
-    public static void DepositView()
+    public static void Deposit()
     {
         Console.WriteLine("Type \"exit\" to return to main menu");
         var isValid = false;
@@ -12,20 +12,20 @@ public class DepositViewer
         
         while (!isValid)
         {
-            inputtedAccount = MainMenuViewer.ParseAccount();
+            inputtedAccount = MainMenuView.ParseAccount();
             
             if (inputtedAccount == "exit")
             {
                 return;
             }
             
-            inputtedAmount = MainMenuViewer.ParseAmount();
+            inputtedAmount = MainMenuView.ParseAmount();
             if (inputtedAmount == null)
             {
                 return;
             }
 
-            isValid = MainMenuViewer.Controller.MakeDeposit(inputtedAccount, (decimal)inputtedAmount);
+            isValid = MainMenuView.Controller.MakeDeposit(inputtedAccount, (decimal)inputtedAmount);
 
             if (!isValid)
             {
@@ -35,6 +35,6 @@ public class DepositViewer
         }
         
         Console.WriteLine($"Successfully deposited ${inputtedAmount:F2} to Id: {inputtedAccount}.");
-        Console.WriteLine($"New Balance of ${MainMenuViewer.Controller.CheckBalance(inputtedAccount):F2}");
+        Console.WriteLine($"New Balance of ${MainMenuView.Controller.CheckBalance(inputtedAccount):F2}");
     }
 }

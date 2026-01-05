@@ -1,8 +1,8 @@
 ﻿namespace TerminalBankingApp.Views;
 
-public class WithdrawViewer
+public class WithdrawView
 {
-    public static void WithdrawView()
+    public static void Withdraw()
     {
         Console.WriteLine("Type \"exit\" to return to main menu");
         var isValid = false;
@@ -12,20 +12,20 @@ public class WithdrawViewer
         
         while (!isValid)
         {
-            inputtedAccount = MainMenuViewer.ParseAccount();
+            inputtedAccount = MainMenuView.ParseAccount();
             
             if (inputtedAccount == "exit")
             {
                 return;
             }
             
-            inputtedAmount = MainMenuViewer.ParseAmount();
+            inputtedAmount = MainMenuView.ParseAmount();
             if (inputtedAmount == null)
             {
                 return;
             }
 
-            isValid = MainMenuViewer.Controller.MakeWithdraw(inputtedAccount, (decimal)inputtedAmount);
+            isValid = MainMenuView.Controller.MakeWithdraw(inputtedAccount, (decimal)inputtedAmount);
 
             if (!isValid)
             {
@@ -34,6 +34,6 @@ public class WithdrawViewer
         }
         
         Console.WriteLine($"Successfully withdrew ${inputtedAmount:F2} to Id: {inputtedAccount}.");
-        Console.WriteLine($"New Balance of ${MainMenuViewer.Controller.CheckBalance(inputtedAccount):F2}");
+        Console.WriteLine($"New Balance of ${MainMenuView.Controller.CheckBalance(inputtedAccount):F2}");
     }
 }

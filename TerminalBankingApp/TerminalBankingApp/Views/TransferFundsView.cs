@@ -1,8 +1,8 @@
 ﻿namespace TerminalBankingApp.Views;
 
-public class TransferFundsViewer
+public class TransferFundsView
 {
-    public static void TransferFundsView()
+    public static void TransferFunds()
     {
         Console.WriteLine("Type \"exit\" to return to main menu");
         var isValid = false;
@@ -14,7 +14,7 @@ public class TransferFundsViewer
         while (!isValid)
         {
             Console.Write(@"(Sending Account) ");
-            inputtedSender = MainMenuViewer.ParseAccount();
+            inputtedSender = MainMenuView.ParseAccount();
             
             if (inputtedSender == "exit")
             {
@@ -22,20 +22,20 @@ public class TransferFundsViewer
             }
             
             Console.Write(@"(Receiving Account) ");
-            inputtedReceiver = MainMenuViewer.ParseAccount();
+            inputtedReceiver = MainMenuView.ParseAccount();
             
             if (inputtedReceiver == "exit")
             {
                 return;
             }
             
-            inputtedAmount = MainMenuViewer.ParseAmount();
+            inputtedAmount = MainMenuView.ParseAmount();
             if (inputtedAmount == null)
             {
                 return;
             }
 
-            isValid = MainMenuViewer.Controller.MakeTransfer(inputtedSender,inputtedReceiver, (decimal)inputtedAmount);
+            isValid = MainMenuView.Controller.MakeTransfer(inputtedSender,inputtedReceiver, (decimal)inputtedAmount);
 
             if (!isValid)
             {

@@ -1,12 +1,11 @@
 ﻿namespace TerminalBankingApp.Views;
 
-public class CreateAccountViewer
+public class CreateAccountView
 {
-    public static void CreateAccountView()
+    public static void CreateAccount()
     {
         Console.WriteLine("Accounts names must be of the structure <first name> <second name> ... <last name> with only letters");
         Console.WriteLine("Type \"exit\" to return to main menu");
-        Account? newAccount = null;
 
         while (newAccount == null)
         {
@@ -18,7 +17,7 @@ public class CreateAccountViewer
                 return;
             }
 
-            newAccount = MainMenuViewer.Controller.CreateAccount(inputtedName);
+            newAccount = MainMenuView.Controller.CreateAccount(inputtedName);
         }
         
         Console.WriteLine($"Created new account under name of {newAccount.HolderName} with an Id of {newAccount.Id}");

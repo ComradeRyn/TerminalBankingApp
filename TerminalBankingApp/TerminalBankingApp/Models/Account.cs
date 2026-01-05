@@ -1,18 +1,10 @@
-﻿namespace TerminalBankingApp;
+﻿namespace TerminalBankingApp.Models;
 
-public class Account
+public class Account(string name)
 {
-    public Guid Id { get; init; }
+    public Guid Id { get; } = Guid.NewGuid();
 
-    public string HolderName { get; init; }
+    public string HolderName { get; } = name;
 
     public decimal Balance { get; set; }
-    
-    public Account(string name)
-    {
-        HolderName = name;
-        Id = Guid.NewGuid();
-        Balance = 0;
-    }
-    
 }
