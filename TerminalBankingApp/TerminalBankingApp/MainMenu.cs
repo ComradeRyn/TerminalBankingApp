@@ -104,9 +104,9 @@ public class MainMenu
         Account? retrievedAccount;
         decimal retrievedAmount;
 
-        var parseSucessful = ParseAccountAndAmount(manager, out retrievedAccount, out retrievedAmount);
+        var parseSuccessful = ParseAccountAndAmount(manager, out retrievedAccount, out retrievedAmount);
 
-        if (parseSucessful)
+        if (parseSuccessful)
         {
             var request = new DepositRequest(retrievedAccount, retrievedAmount);
             Console.WriteLine(request.PerformRequest());
@@ -120,9 +120,9 @@ public class MainMenu
         Account? retrievedAccount;
         decimal retrievedAmount;
 
-        var parseSucessful = ParseAccountAndAmount(manager, out retrievedAccount, out retrievedAmount);
+        var parseSuccessful = ParseAccountAndAmount(manager, out retrievedAccount, out retrievedAmount);
 
-        if (parseSucessful)
+        if (parseSuccessful)
         {
             var request = new WithdrawRequest(retrievedAccount, retrievedAmount);
             Console.WriteLine(request.PerformRequest());

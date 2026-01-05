@@ -14,15 +14,7 @@ public class AccountCreationRequest : IRequest
     public bool ValidateName()
     {
         var nameTokens = _accountName.Split(" ");
-        foreach (var name in nameTokens)
-        {
-            if (!name.All(char.IsLetter) || name == "")
-            {
-                return false; 
-            }
-        }
-
-        return true;
+        return nameTokens.All(name => name.All(char.IsLetter) && name != "");
     }
     
     public string PerformRequest()
