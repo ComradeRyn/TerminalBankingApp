@@ -54,7 +54,7 @@ public static class MainMenuViewer
         } while (continueRunning);
     }
     
-    public static string ParseAccount()
+    public static string? ParseAccount()
     {
         Console.Write("Enter account ID: ");
         var inputtedId = Console.ReadLine();
