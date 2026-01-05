@@ -41,7 +41,7 @@ public static class MainMenuViewer
                    CheckAccountBalanceViewer.CheckAccountBalanceView();
                     break;
                 case "5":
-                    //Transfer(accountManager);
+                    TransferFundsViewer.TransferFundsView();
                     break;
                 case "9":
                     Console.WriteLine("Exit Confirmed: Have a nice day!");
@@ -56,10 +56,8 @@ public static class MainMenuViewer
     
     public static string ParseAccount()
     {
-        string inputtedId;
-        
         Console.Write("Enter account ID: ");
-        inputtedId = Console.ReadLine();
+        var inputtedId = Console.ReadLine();
 
         return inputtedId;
     }

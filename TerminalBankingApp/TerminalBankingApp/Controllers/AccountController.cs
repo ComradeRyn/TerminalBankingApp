@@ -13,7 +13,9 @@ public class AccountController
     
     public bool MakeDeposit(string id, decimal amount)
     {
-        if (amount <= 0) return false;
+        var retrievedAccount = GetAccount(id);
+        
+        if (retrievedAccount == null || amount <= 0) return false;
         return UpdateBalance(id, amount);
     }
 
