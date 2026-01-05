@@ -108,8 +108,18 @@ public class MainMenu
 
         if (parseSuccessful)
         {
-            var request = new DepositRequest(retrievedAccount, retrievedAmount);
-            Console.WriteLine(request.PerformRequest());
+            //var request = new DepositRequest(retrievedAccount, retrievedAmount);
+            //Console.WriteLine(request.PerformRequest());
+            var depositSuccessful = retrievedAccount.MakeDeposit(retrievedAmount);
+
+            if (depositSuccessful)
+            {
+                Console.WriteLine($"Successfully deposited ${retrievedAmount:F2}. \nNew Balance: ${retrievedAccount.Balance:F2}"); 
+            }
+            else
+            {
+                Console.WriteLine("Action failed: Deposit amount must be positive");
+            }
         }
     }
 
@@ -124,8 +134,20 @@ public class MainMenu
 
         if (parseSuccessful)
         {
-            var request = new WithdrawRequest(retrievedAccount, retrievedAmount);
-            Console.WriteLine(request.PerformRequest());
+            // var request = new WithdrawRequest(retrievedAccount, retrievedAmount);
+            // Console.WriteLine(request.PerformRequest());
+
+            var withdrawSuccessful = retrievedAccount.MakeWithdraw(retrievedAmount);
+
+            if (withdrawSuccessful)
+            {
+                Console.WriteLine($"Successfully withdrew ${retrievedAmount:F2}. \nNew Balance: ${retrievedAccount.Balance:F2}");
+            }
+
+            else
+            {
+                Console.WriteLine("Action failed: Withdraw amount must be positive and less than or equal to your Balance!");
+            }
         }
     }
 
@@ -153,9 +175,21 @@ public class MainMenu
         {
             return;
         }
+        
+        // var request = new TransferRequest(receiver, sender, amount);
+        // Console.WriteLine(request.PerformRequest());
 
-        var request = new TransferRequest(receiver, sender, amount);
-        Console.WriteLine(request.PerformRequest());
+        var transferSuccessful = sender.MakeTransfer(receiver, amount);
+
+        if (transferSuccessful)
+        {
+            Console.WriteLine($"Successfully transferred ${amount:F2}.");
+        }
+        
+        else
+        {
+            Console.WriteLine("Transfer failed: Transfer amount must be positive and within limits of sender's account.");
+        }
     }
 
     private static void Create(AccountManager manager)
@@ -163,21 +197,23 @@ public class MainMenu
         Console.WriteLine("type \"exit\" to return back to main menu");
         Console.WriteLine("Names should only be composed of letters in format of <first name> <second name> <...> <last name>");
         
-        AccountCreationRequest request;
+        //AccountCreationRequest request;
+        Account newAccount;
         do
         {
             Console.Write("Enter the name of the account holder: ");
             var holderName = Console.ReadLine();
-            request = new AccountCreationRequest(manager, holderName);
+            //request = new AccountCreationRequest(manager, holderName);
 
             if (holderName == "exit")
             {
                 return;
             }
+
+            newAccount = manager.CreateAccount(holderName);
+        } while (newAccount == null);
             
-        } while (!request.ValidateName());
-            
-        Console.WriteLine(request.PerformRequest());
+        Console.WriteLine($"Account successfully created under {newAccount.HolderName} with Id of {newAccount.Id}");
     }
 
     private static void CheckBalance(AccountManager manager)
@@ -189,8 +225,8 @@ public class MainMenu
 
         if (parseSuccessful)
         {
-            var request = new CheckBalanceRequest(inputtedAccount);
-            Console.WriteLine(request.PerformRequest());
+            //var request = new CheckBalanceRequest(inputtedAccount);
+            Console.WriteLine($"Account Balance of ${inputtedAccount.Balance:F2}.");
         }
     }
 }

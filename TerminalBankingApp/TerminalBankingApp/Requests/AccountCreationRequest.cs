@@ -19,7 +19,9 @@ public class AccountCreationRequest : IRequest
     
     public string PerformRequest()
     {
-        var newAccount = _accountManager.CreateAccount(_accountName);
-        return $"Account successfully created under {_accountName} with Id of {newAccount.Id}";
+        // var newAccount = _accountManager.CreateAccount(_accountName);
+        // return $"Account successfully created under {_accountName} with Id of {newAccount.Id}";
+
+        return "";
     }
 }
