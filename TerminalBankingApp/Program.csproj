@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackAsTool>true</PackAsTool>
+    <UserSecretsId>Program-2fa5d9d5836904ac1e7cdc3838c1b393ddb19ae1f5faaaa1a9c23c61ef15422a</UserSecretsId>
+    <PublishAot>false</PublishAot>
+  </PropertyGroup>
+
+</Project>

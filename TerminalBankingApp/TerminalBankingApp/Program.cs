@@ -2,8 +2,7 @@
 using TerminalBankingApp;
 
 Console.WriteLine("\nWelcome to my Terminal Banking App! Please select one of the following numbers for the corresponding option:");
-        
-string input;
+
 var continueRunning = true;
 var accountManager = new AccountManager();
         
@@ -17,7 +16,7 @@ do
             5: Transfer Funds 
             9: exit");
             
-    input = Console.ReadLine();
+    var input = Console.ReadLine();
             
     switch (input)
     {
@@ -53,10 +52,10 @@ static bool ParseAccount(AccountManager manager, out Account? retrievedAccount)
     {
         Console.Write("Enter account ID: ");
         inputtedId = Console.ReadLine();
-
+        
+        //Database call
         retrievedAccount = manager.GetAccount(inputtedId);
     } while (retrievedAccount is null && inputtedId != "exit");
-    
 
     return retrievedAccount is not null;
 }
@@ -102,8 +101,7 @@ static void Deposit(AccountManager manager)
 
     if (parseSuccessful)
     {
-        //var request = new DepositRequest(retrievedAccount, retrievedAmount);
-        //Console.WriteLine(request.PerformRequest());
+        //API call
         var depositSuccessful = retrievedAccount.MakeDeposit(retrievedAmount);
 
         if (depositSuccessful)
@@ -128,9 +126,7 @@ static void Withdraw(AccountManager manager)
 
     if (parseSuccessful)
     {
-        // var request = new WithdrawRequest(retrievedAccount, retrievedAmount);
-        // Console.WriteLine(request.PerformRequest());
-
+        //API call
         var withdrawSuccessful = retrievedAccount.MakeWithdraw(retrievedAmount);
 
         if (withdrawSuccessful)
@@ -170,9 +166,7 @@ static void Transfer(AccountManager manager)
         return;
     }
     
-    // var request = new TransferRequest(receiver, sender, amount);
-    // Console.WriteLine(request.PerformRequest());
-
+    //API call
     var transferSuccessful = sender.MakeTransfer(receiver, amount);
 
     if (transferSuccessful)
@@ -191,19 +185,17 @@ static void Create(AccountManager manager)
     Console.WriteLine("type \"exit\" to return back to main menu");
     Console.WriteLine("Names should only be composed of letters in format of <first name> <second name> <...> <last name>");
     
-    //AccountCreationRequest request;
     Account newAccount;
     do
     {
         Console.Write("Enter the name of the account holder: ");
         var holderName = Console.ReadLine();
-        //request = new AccountCreationRequest(manager, holderName);
 
         if (holderName == "exit")
         {
             return;
         }
-
+        //Database call
         newAccount = manager.CreateAccount(holderName);
     } while (newAccount == null);
         
@@ -219,7 +211,7 @@ static void CheckBalance(AccountManager manager)
 
     if (parseSuccessful)
     {
-        //var request = new CheckBalanceRequest(inputtedAccount);
+        //API call
         Console.WriteLine($"Account Balance of ${inputtedAccount.Balance:F2}.");
     }
 }
