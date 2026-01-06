@@ -15,14 +15,13 @@ public class WithdrawView : IViewable
         while (!isSuccessful)
         {
             var inputtedId = Parse.Id();
-            IAccountController accountController;
-            
+
             if (inputtedId == "exit")
             {
                 return;
             }
             
-            if (!bankController.TryGetAccount(inputtedId, out accountController))
+            if (!bankController.TryGetAccount(inputtedId, out var accountController))
             {
                 Console.WriteLine("Invalid account Id");
                 continue;
@@ -41,5 +40,10 @@ public class WithdrawView : IViewable
                 ? $"Successfully withdrew ${inputtedAmount:F2} to Id: {inputtedId}"
                 : $"{Responses.nonNegative} and {Responses.lessThanBalance}");
         }
+    }
+
+    public string GetActionName()
+    {
+        return "Make a Withdraw";
     }
 }

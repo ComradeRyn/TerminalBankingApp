@@ -2,22 +2,13 @@
 using TerminalBankingApp.Controllers;
 using TerminalBankingApp.Views.Interfaces;
 
-/* Things to do:
- * - Implement IViewable *done*
- *      - handle()
- *      - success()
- *      - failure()
- *
- * - Have programs go through and run from a main array that holds a bunch of the interface instances *done*
- * - Make it so rather than having the AccountManagerController being a static object, it is passed from instance to instance *done*
- * - Deal with the success and fail states *done*
- * - Tweak the check methods into the 'try' format *done*
- * - Make it clear where the failure point is *done*
- * - Possibly make it so the private fields in the controllers are private get public set parameters 
- * 
- */
+var views = new IViewable[] {
+    new CreateAccountView(), 
+    new DepositView(), 
+    new WithdrawView(), 
+    new CheckAccountBalanceView(), 
+    new TransferFundsView()};
 
-var views = new IViewable[] {new MainMenuView(), new CreateAccountView(), new DepositView(), new WithdrawView(), new CheckAccountBalanceView(), new TransferFundsView()};
 var managerController = new BankController();
 
 var isRunning = true;
@@ -27,11 +18,17 @@ Console.WriteLine(
 
 while (isRunning)
 {
-    views[0].Handle(managerController);
-
+    var counter = 1;
+    foreach (var view in views)
+    {
+        Console.WriteLine($"{counter}: {view.GetActionName()}");
+        counter++;
+    }
+    Console.WriteLine($"{counter + 3}: exit");
+    
     var userInput = Console.ReadLine();
 
-    if (!int.TryParse(userInput, out var viewSelection) || viewSelection == 0)
+    if (!int.TryParse(userInput, out var viewSelection) || viewSelection-- == 0)
     {
         viewSelection = -1;
     }
@@ -43,7 +40,7 @@ while (isRunning)
 
     catch(IndexOutOfRangeException e)
     {
-        if (viewSelection == 9)
+        if (viewSelection == counter + 2)
         {
             isRunning = false;
             Console.WriteLine("Exit Confirmed: Have a nice day!");

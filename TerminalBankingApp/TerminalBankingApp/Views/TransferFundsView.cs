@@ -61,4 +61,9 @@ public class TransferFundsView : IViewable
                 : Responses.lessThanBalance);
         }
     }
+
+    public string GetActionName()
+    {
+        return "Transfer Funds";
+    }
 }

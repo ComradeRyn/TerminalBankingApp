@@ -45,4 +45,9 @@ public class CreateAccountView : IViewable
     {
         Console.WriteLine($"Invalid input: {name} does not follow the naming parameter.");
     }
+    
+    public string GetActionName()
+    {
+        return "Create Account";
+    }
 }

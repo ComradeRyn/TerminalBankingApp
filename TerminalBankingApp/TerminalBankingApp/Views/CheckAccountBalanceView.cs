@@ -29,4 +29,9 @@ public class CheckAccountBalanceView : IViewable
             Console.WriteLine(isSuccessful ? $"Account {inputtedId} has a balance of ${balance:F2}" : Responses.invalidId);
         }
     }
+
+    public string GetActionName()
+    {
+        return "Check Account Balance";
+    }
 }

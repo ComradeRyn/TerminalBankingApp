@@ -42,4 +42,9 @@ public class DepositView : IViewable
         }
     }
     
+    public string GetActionName()
+    {
+        return "Make a Deposit";
+    }
+    
 }
