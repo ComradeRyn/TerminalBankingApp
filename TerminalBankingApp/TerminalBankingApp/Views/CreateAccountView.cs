@@ -7,6 +7,7 @@ public class CreateAccountView : IViewable
 {
     public void Handle(BankController bankController)
     {
+        Console.WriteLine("Type \"exit\" to return to main menu");
         Console.WriteLine("Accounts names must be of the structure <first name> <second name> ... <last name> with only letters");
         var isSuccessful = false;
 

@@ -21,7 +21,6 @@ var views = new IViewable[] {new MainMenuView(), new CreateAccountView(), new De
 var managerController = new BankController();
 
 var isRunning = true;
-var viewSelection = 0;
 
 Console.WriteLine(
     "\nWelcome to my Terminal Banking App! Please select one of the following numbers for the corresponding option:");
@@ -31,15 +30,14 @@ while (isRunning)
     views[0].Handle(managerController);
 
     var userInput = Console.ReadLine();
-    
-    if (!int.TryParse(userInput, out viewSelection))
+
+    if (!int.TryParse(userInput, out var viewSelection))
     {
         viewSelection = -1;
     }
     
     try
     {
-        Console.WriteLine("Type \"exit\" to return to main menu");
         views[viewSelection].Handle(managerController);
     }
 

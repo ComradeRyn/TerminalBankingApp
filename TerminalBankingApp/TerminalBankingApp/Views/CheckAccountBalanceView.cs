@@ -10,6 +10,8 @@ public class CheckAccountBalanceView : IViewable
 
     public void Handle(BankController bankController)
     {
+        Console.WriteLine("Type \"exit\" to return to main menu");
+        
         var isSuccessful = false;
 
         while (!isSuccessful)
@@ -24,7 +26,7 @@ public class CheckAccountBalanceView : IViewable
             bankController.TryGetAccount(inputtedId, out var account);
             isSuccessful = account.TryCheckBalance(out var balance);
 
-            Console.WriteLine(isSuccessful ? $"Account {inputtedId} has a balance of ${balance:F2}" : "Invalid account Id");
+            Console.WriteLine(isSuccessful ? $"Account {inputtedId} has a balance of ${balance:F2}" : Responses.invalidId);
         }
     }
 }

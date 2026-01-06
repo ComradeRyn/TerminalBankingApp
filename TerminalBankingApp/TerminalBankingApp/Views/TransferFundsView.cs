@@ -9,6 +9,7 @@ public class TransferFundsView : IViewable
 {
     public void Handle(BankController managerController)
     {
+        Console.WriteLine("Type \"exit\" to return to main menu");
         var isSuccessful = false;
 
         while (!isSuccessful)

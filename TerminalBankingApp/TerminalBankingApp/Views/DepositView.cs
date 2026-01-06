@@ -9,6 +9,7 @@ public class DepositView : IViewable
 {
     public void Handle(BankController bankController)
     {
+        Console.WriteLine("Type \"exit\" to return to main menu");
         var isSuccessful = false;
 
         while (!isSuccessful)
@@ -22,7 +23,7 @@ public class DepositView : IViewable
 
             if (!bankController.TryGetAccount(inputtedAccount, out var selectedAccount))
             {
-                Console.WriteLine("Invalid account Id");
+                Console.WriteLine(Responses.invalidId);
                 continue;
             }
 
@@ -37,7 +38,7 @@ public class DepositView : IViewable
 
             Console.WriteLine(isSuccessful
                 ? $"Successfully deposited ${inputtedAmount:F2} to Id: {inputtedAccount}."
-                : "Must enter positive money amount");
+                : Responses.nonNegative);
         }
     }
     

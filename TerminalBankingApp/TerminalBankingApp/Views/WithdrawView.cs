@@ -9,6 +9,7 @@ public class WithdrawView : IViewable
 {
     public void Handle(BankController bankController)
     {
+        Console.WriteLine("Type \"exit\" to return to main menu");
         var isSuccessful = false;
 
         while (!isSuccessful)
@@ -36,9 +37,9 @@ public class WithdrawView : IViewable
 
             isSuccessful = accountController.TryMakeWithdraw((decimal)inputtedAmount);
 
-            Console.WriteLine(!isSuccessful
-                ? "Entered amount must be positive, and less than or equal to account balance!"
-                : $"Successfully withdrew {inputtedAmount:F2} to Id: {inputtedId}");
+            Console.WriteLine(isSuccessful
+                ? $"Successfully withdrew ${inputtedAmount:F2} to Id: {inputtedId}"
+                : $"{Responses.nonNegative} and {Responses.lessThanBalance}");
         }
     }
 }
