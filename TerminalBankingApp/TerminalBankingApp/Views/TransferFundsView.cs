@@ -1,4 +1,5 @@
 ﻿using TerminalBankingApp.Controllers;
+using TerminalBankingApp.Models;
 using TerminalBankingApp.Utils;
 using TerminalBankingApp.Views.Interfaces;
 
@@ -6,57 +7,57 @@ namespace TerminalBankingApp.Views;
 
 public class TransferFundsView : IViewable
 {
-    /*
-    public static void TransferFunds()
+    public void Handle(BankController managerController)
     {
-        Console.WriteLine("Type \"exit\" to return to main menu");
-        var isValid = false;
-    
-        var inputtedReceiver = "";
-        var inputtedSender = "";
-        var inputtedAmount = (decimal?)null;
-        
-        var controller = new AccountController(MainMenuView.ManagerController);
-        
-        while (!isValid)
+        var isSuccessful = false;
+
+        while (!isSuccessful)
         {
             Console.Write(@"(Sending Account) ");
-            inputtedSender = Parse.Id();
+            var inputtedSender = Parse.Id();
             
             if (inputtedSender == "exit")
             {
                 return;
             }
             
+            if (!managerController.TryGetAccount(inputtedSender, out var sendingAccount))
+            {
+                Console.WriteLine(Responses.invalidId);
+                continue;
+            }
+            
+            
             Console.Write(@"(Receiving Account) ");
-            inputtedReceiver = Parse.Id();
-            
-            if (inputtedReceiver == "exit")
-            {
-                return;
-            }
-            
-            inputtedAmount = Parse.Amount();
-            if (inputtedAmount == null)
-            {
-                return;
-            }
-    
-            controller.TrySetAccount(inputtedSender);
-            isValid = controller.TryMakeTransfer(inputtedReceiver, (decimal)inputtedAmount);
-    
-            if (!isValid)
-            {
-                Console.WriteLine("Invalid input: Ids must be valid, with a positive money amount, less than the balance of the sender.");
-            }
-        }
-        
-        Console.WriteLine($"Successfully transferred ${inputtedAmount:F2} to from Id: {inputtedSender} to Id:{inputtedReceiver}.");
-    }
-    */
+            var inputtedReceiver = Parse.Id();
 
-    public void Handle(BankController managerController)
-    {
-        throw new NotImplementedException();
+            if (inputtedSender == "exit")
+            {
+                return;
+            }
+            
+            if (!managerController.TryGetAccount(inputtedReceiver, out var receivingAccount))
+            {
+                Console.WriteLine(Responses.invalidId);
+                continue;
+            }
+            
+            var inputtedAmount = Parse.Amount();
+
+            switch (inputtedAmount)
+            {
+                case null:
+                    return;
+                case -1:
+                    Console.WriteLine(Responses.nonNegative);
+                    continue;
+            }
+            
+            isSuccessful = sendingAccount.TryMakeTransfer(receivingAccount, (decimal)inputtedAmount);
+
+            Console.WriteLine(isSuccessful
+                ? $"Successfully transferred ${inputtedAmount:F2} to from Id: {inputtedSender} to Id: {inputtedReceiver}."
+                : Responses.lessThanBalance);
+        }
     }
 }

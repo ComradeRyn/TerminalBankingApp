@@ -10,9 +10,9 @@ public class CheckAccountBalanceView : IViewable
 
     public void Handle(BankController bankController)
     {
-        var isSuccesful = false;
+        var isSuccessful = false;
 
-        while (!isSuccesful)
+        while (!isSuccessful)
         {
             var inputtedId = Parse.Id();
 
@@ -22,9 +22,9 @@ public class CheckAccountBalanceView : IViewable
             }
 
             bankController.TryGetAccount(inputtedId, out var account);
-            isSuccesful = account.TryCheckBalance(out var balance);
+            isSuccessful = account.TryCheckBalance(out var balance);
 
-            Console.WriteLine(isSuccesful ? $"Account {inputtedId} has a balance of ${balance}" : "Invalid account Id");
+            Console.WriteLine(isSuccessful ? $"Account {inputtedId} has a balance of ${balance:F2}" : "Invalid account Id");
         }
     }
 }

@@ -3,17 +3,17 @@ using TerminalBankingApp.Controllers;
 using TerminalBankingApp.Views.Interfaces;
 
 /* Things to do:
- * - Implement IViewable
+ * - Implement IViewable *done*
  *      - handle()
  *      - success()
  *      - failure()
  *
- * - Have programs go through and run from a main array that holds a bunch of the interface instances
- * - Make it so rather than having the AccountManagerController being a static object, it is passed from instance to instance
- * - Deal with the success and fail states
- * - Tweak the check methods into the 'try' format
- * - Make it clear where the failure point is
- * - Possibly make it so the private fields in the controllers are private get public set parameters
+ * - Have programs go through and run from a main array that holds a bunch of the interface instances *done*
+ * - Make it so rather than having the AccountManagerController being a static object, it is passed from instance to instance *done*
+ * - Deal with the success and fail states *done*
+ * - Tweak the check methods into the 'try' format *done*
+ * - Make it clear where the failure point is *done*
+ * - Possibly make it so the private fields in the controllers are private get public set parameters 
  * 
  */
 

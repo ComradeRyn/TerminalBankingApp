@@ -14,14 +14,13 @@ public class DepositView : IViewable
         while (!isSuccessful)
         {
             var inputtedAccount = Parse.Id();
-            IAccountController selectedAccount;
 
             if (inputtedAccount == "exit")
             {
                 return;
             }
 
-            if (!bankController.TryGetAccount(inputtedAccount, out selectedAccount))
+            if (!bankController.TryGetAccount(inputtedAccount, out var selectedAccount))
             {
                 Console.WriteLine("Invalid account Id");
                 continue;
@@ -34,18 +33,11 @@ public class DepositView : IViewable
                 return;
             }
 
-            if (inputtedAmount == -1)
-            {
-                Console.WriteLine("Must enter positive money amount");
-                continue;
-            }
-
             isSuccessful = selectedAccount.TryMakeDeposit((decimal)inputtedAmount);
 
-            if (isSuccessful)
-            {
-                Console.WriteLine($"Successfully deposited ${inputtedAmount:F2} to Id: {inputtedAccount}.");
-            }
+            Console.WriteLine(isSuccessful
+                ? $"Successfully deposited ${inputtedAmount:F2} to Id: {inputtedAccount}."
+                : "Must enter positive money amount");
         }
     }
     
