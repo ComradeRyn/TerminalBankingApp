@@ -1,17 +1,24 @@
-﻿namespace TerminalBankingApp.Views;
+﻿using TerminalBankingApp.Controllers;
+using TerminalBankingApp.Models;
+
+namespace TerminalBankingApp.Views;
 
 public class CheckAccountBalanceViewer
 {
-    public static void CheckAccountBalanceView()
+    public static void CheckAccountBalance()
     {
+        
         Console.WriteLine("Type \"exit\" to return to main menu");
-        var inputtedAccount = (string?)null;
+        
+        string? inputtedAccount = null;
         var accountBalance = -1m;
+        var controller = new AccountController(MainMenuView.ManagerController); 
 
         while (accountBalance == -1)
         {
             inputtedAccount = MainMenuView.ParseAccount();
-            accountBalance = MainMenuView.Controller.CheckBalance(inputtedAccount);
+            controller.SetAccount(inputtedAccount);
+            accountBalance = controller.CheckBalance();
 
             if (inputtedAccount == "exit")
             {

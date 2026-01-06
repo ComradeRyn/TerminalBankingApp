@@ -5,69 +5,71 @@ namespace TerminalBankingApp.Controllers;
 public class AccountController
 {
     private Account? _account;
+    private AccountManagerController _accountManagerController;
 
-    public AccountController(Account account)
-    {
-        _account = account;
-    }
-
-    public AccountController(string id, AccountManagerController accountManagerController)
+    public AccountController(string? id, AccountManagerController accountManagerController)
     {
         _account = accountManagerController.GetAccount(id);
+        _accountManagerController = accountManagerController;
     }
     
-    public bool MakeDeposit(string id, decimal amount)
+    public AccountController(AccountManagerController accountManagerController)
     {
-        var retrievedAccount = _account;
-        
-        if (retrievedAccount == null || amount <= 0) return false;
-        return UpdateBalance(id, amount);
+        _account = null;
+        _accountManagerController = accountManagerController;
     }
 
-    public bool MakeWithdraw(string id, decimal amount)
+    public bool CheckAccountNull() 
+        => _account == null;
+    
+    // Was told about a Try syntax
+    public bool SetAccount(string? id)
     {
-        var retrievedAccount = _account;
-        
-        if (retrievedAccount == null || amount <= 0 || amount > retrievedAccount.Balance) return false;
-        return UpdateBalance(id,amount * -1);
+        _account = _accountManagerController.GetAccount(id);
+        return _account != null;
+    }
+    
+    public bool MakeDeposit(decimal amount)
+    {
+        if (_account == null || amount <= 0) return false;
+        return UpdateBalance(amount);
     }
 
-    public bool MakeTransfer(string sendingId, 
-        string receivingId, 
-        decimal amount)
+    public bool MakeWithdraw(decimal amount)
     {
-        if (MakeWithdraw(sendingId, amount))
+        if (_account == null || amount <= 0 || amount > _account.Balance) return false;
+        return UpdateBalance(amount * -1);
+    }
+
+    public bool MakeTransfer(string receivingId, decimal amount)
+    {
+        var receiving = new AccountController(receivingId, _accountManagerController);
+        if (!MakeWithdraw(amount)) return false;
+        if (receiving.MakeDeposit(amount))
         {
-            if (MakeDeposit(receivingId, amount))
-            {
-                return true;
-            }
-            else
-            {
-                MakeDeposit(sendingId, amount);
-            }
+            return true;
         }
-        
+
+        MakeDeposit(amount);
+
         return false;
     }
     
     
-    public decimal CheckBalance(string id)
+    public decimal CheckBalance()
     {
-        var selectedAccount = _account;
-        if (selectedAccount == null)
+        if (_account == null)
         {
             return -1;
         }
 
-        return selectedAccount.Balance;
+        return _account.Balance;
     }
     
-    private bool UpdateBalance(string id, decimal amount)
+    private bool UpdateBalance(decimal amount)
     {
-        var retrievedAccount = _account;
-        if (retrievedAccount == null) return false;
-        retrievedAccount.Balance += amount;
+        if (_account == null) return false;
+        _account.Balance += amount;
 
         return true;
     }

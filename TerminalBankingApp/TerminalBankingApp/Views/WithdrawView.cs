@@ -1,4 +1,6 @@
-﻿namespace TerminalBankingApp.Views;
+﻿using TerminalBankingApp.Controllers;
+
+namespace TerminalBankingApp.Views;
 
 public class WithdrawView
 {
@@ -9,6 +11,8 @@ public class WithdrawView
 
         var inputtedAccount = "";
         var inputtedAmount = (decimal?)null;
+
+        var controller = new AccountController(MainMenuView.ManagerController);
         
         while (!isValid)
         {
@@ -25,7 +29,8 @@ public class WithdrawView
                 return;
             }
 
-            isValid = MainMenuView.Controller.MakeWithdraw(inputtedAccount, (decimal)inputtedAmount);
+            controller.SetAccount(inputtedAccount);
+            isValid = controller.MakeWithdraw((decimal)inputtedAmount);
 
             if (!isValid)
             {
@@ -34,6 +39,6 @@ public class WithdrawView
         }
         
         Console.WriteLine($"Successfully withdrew ${inputtedAmount:F2} to Id: {inputtedAccount}.");
-        Console.WriteLine($"New Balance of ${MainMenuView.Controller.CheckBalance(inputtedAccount):F2}");
+        Console.WriteLine($"New Balance of ${controller.CheckBalance():F2}");
     }
 }

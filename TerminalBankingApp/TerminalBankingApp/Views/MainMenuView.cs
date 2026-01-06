@@ -32,19 +32,19 @@ public static class MainMenuView
             switch (input)
             {
                 case "1":
-                    CreateAccountView.CreateAccountView();
+                    CreateAccountView.CreateAccount();
                     break;
                 case "2":
-                    DepositView.DepositView();
+                    DepositView.Deposit();
                     break;
                 case "3":
-                    WithdrawView.WithdrawView();
+                    WithdrawView.Withdraw();
                     break;
                 case "4":
-                   CheckAccountBalanceViewer.CheckAccountBalanceView();
+                   CheckAccountBalanceViewer.CheckAccountBalance();
                     break;
                 case "5":
-                    TransferFundsView.TransferFundsView();
+                    TransferFundsView.TransferFunds();
                     break;
                 case "9":
                     Console.WriteLine("Exit Confirmed: Have a nice day!");
@@ -73,9 +73,14 @@ public static class MainMenuView
         
         var inputtedAmount = Console.ReadLine();
         
-        if (inputtedAmount == "exit" || !decimal.TryParse(inputtedAmount, out amount))
+        if (inputtedAmount == "exit")
         {
             return null;
+        }
+        
+        if(!decimal.TryParse(inputtedAmount, out amount))
+        {
+            return -1;
         }
 
         return amount;

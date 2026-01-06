@@ -1,4 +1,6 @@
-﻿namespace TerminalBankingApp.Views;
+﻿using TerminalBankingApp.Controllers;
+
+namespace TerminalBankingApp.Views;
 
 public class TransferFundsView
 {
@@ -10,6 +12,7 @@ public class TransferFundsView
         var inputtedReceiver = "";
         var inputtedSender = "";
         var inputtedAmount = (decimal?)null;
+        var controller = new AccountController(MainMenuView.ManagerController);
         
         while (!isValid)
         {
@@ -35,7 +38,8 @@ public class TransferFundsView
                 return;
             }
 
-            isValid = MainMenuView.Controller.MakeTransfer(inputtedSender,inputtedReceiver, (decimal)inputtedAmount);
+            controller.SetAccount(inputtedSender);
+            isValid = controller.MakeTransfer(inputtedReceiver, (decimal)inputtedAmount);
 
             if (!isValid)
             {

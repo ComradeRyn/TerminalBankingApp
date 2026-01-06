@@ -11,7 +11,7 @@ public class AccountManagerController
         _accountManager = new AccountManager();
     }
     
-    public Account? CreateAccount(string name)
+    public string? CreateAccount(string name)
     {
         if (!ValidateName(name))
         {
@@ -21,21 +21,18 @@ public class AccountManagerController
         var newAccount = new Account(name);
         _accountManager.Accounts.Add(newAccount.Id.ToString(), newAccount);
 
-        return newAccount;
+        return newAccount.Id.ToString();
     }
 
-    public Account? GetAccount(string id)
+    public Account? GetAccount(string? id)
     {
-        Account value;
-        if (_accountManager.Accounts.TryGetValue(id, out value))
-        {
-            return value;
-        }
-
-        else
+        if (id == null)
         {
             return null;
         }
+        
+        Account? value;
+        return _accountManager.Accounts.TryGetValue(id, out value) ? value : null;
     }
     
     private bool ValidateName(string accountName)
