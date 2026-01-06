@@ -31,7 +31,7 @@ while (isRunning)
 
     var userInput = Console.ReadLine();
 
-    if (!int.TryParse(userInput, out var viewSelection))
+    if (!int.TryParse(userInput, out var viewSelection) || viewSelection == 0)
     {
         viewSelection = -1;
     }
