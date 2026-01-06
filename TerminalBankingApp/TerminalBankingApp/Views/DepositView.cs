@@ -1,4 +1,5 @@
 ﻿using TerminalBankingApp.Controllers;
+using TerminalBankingApp.Utils;
 
 namespace TerminalBankingApp.Views;
 
@@ -17,14 +18,14 @@ public class DepositView
         
         while (!isValid)
         {
-            inputtedAccount = MainMenuView.ParseAccount();
+            inputtedAccount = Parse.Id();
             
             if (inputtedAccount == "exit")
             {
                 return;
             }
             
-            inputtedAmount = MainMenuView.ParseAmount();
+            inputtedAmount = Parse.Amount();
             if (inputtedAmount == null)
             {
                 return;

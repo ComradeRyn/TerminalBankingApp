@@ -1,4 +1,5 @@
 ﻿using TerminalBankingApp.Controllers;
+using TerminalBankingApp.Utils;
 
 namespace TerminalBankingApp.Views;
 
@@ -18,7 +19,7 @@ public class TransferFundsView
         while (!isValid)
         {
             Console.Write(@"(Sending Account) ");
-            inputtedSender = MainMenuView.ParseAccount();
+            inputtedSender = Parse.Id();
             
             if (inputtedSender == "exit")
             {
@@ -26,14 +27,14 @@ public class TransferFundsView
             }
             
             Console.Write(@"(Receiving Account) ");
-            inputtedReceiver = MainMenuView.ParseAccount();
+            inputtedReceiver = Parse.Id();
             
             if (inputtedReceiver == "exit")
             {
                 return;
             }
             
-            inputtedAmount = MainMenuView.ParseAmount();
+            inputtedAmount = Parse.Amount();
             if (inputtedAmount == null)
             {
                 return;

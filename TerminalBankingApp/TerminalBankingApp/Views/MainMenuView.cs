@@ -8,7 +8,7 @@ public static class MainMenuView
      * Are my method names within the view classes currently appropriate in this context?
      * Should each of the view classes be static because they are never instantiated and only going to be called within this class?
      * Is it appropriate to have the instance 'managerController' as static? Current reasoning is there will only ever exist one, and it is required in the AccountController, so I just access directly in each of the child classes
-     * Was told about the 'Try' naming convention, what does it mean, and how should I apply it?
+     * Was told about the 'Try' naming convention, what does it mean, and how should I apply it? x
      * Is it appropriate to use classes that exist within the Controllers folder in other classes within the same folder? (ex: using the AccountManagerController within the AccountController)
      * Would it make sense to move the View helper functions out of the MainMenu class and into their own utilities class?
      */
@@ -60,34 +60,5 @@ public static class MainMenuView
                     break;
             }
         } while (continueRunning);
-    }
-    
-    public static string? ParseAccount()
-    {
-        Console.Write("Enter account ID: ");
-        var inputtedId = Console.ReadLine();
-
-        return inputtedId;
-    }
-
-    public static decimal? ParseAmount()
-    {
-        decimal amount;
-
-        Console.Write("Enter a money amount: ");
-        
-        var inputtedAmount = Console.ReadLine();
-        
-        if (inputtedAmount == "exit")
-        {
-            return null;
-        }
-        
-        if(!decimal.TryParse(inputtedAmount, out amount))
-        {
-            return -1;
-        }
-
-        return amount;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using TerminalBankingApp.Controllers;
+using TerminalBankingApp.Utils;
 
 namespace TerminalBankingApp.Views;
 
@@ -15,7 +16,7 @@ public class CheckAccountBalanceViewer
 
         while (accountBalance == -1)
         {
-            inputtedAccount = MainMenuView.ParseAccount();
+            inputtedAccount = Parse.Id();
             controller.SetAccount(inputtedAccount);
             accountBalance = controller.CheckBalance();
 
