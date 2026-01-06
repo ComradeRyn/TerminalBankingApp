@@ -1,9 +1,10 @@
 ﻿using TerminalBankingApp.Controllers;
 using TerminalBankingApp.Utils;
+using TerminalBankingApp.Views.Interfaces;
 
 namespace TerminalBankingApp.Views;
 
-public class WithdrawView
+public class WithdrawView : IViewable
 {
     public static void Withdraw()
     {
@@ -30,8 +31,8 @@ public class WithdrawView
                 return;
             }
 
-            controller.SetAccount(inputtedAccount);
-            isValid = controller.MakeWithdraw((decimal)inputtedAmount);
+            controller.TrySetAccount(inputtedAccount);
+            isValid = controller.TryMakeWithdraw((decimal)inputtedAmount);
 
             if (!isValid)
             {
@@ -40,6 +41,11 @@ public class WithdrawView
         }
         
         Console.WriteLine($"Successfully withdrew ${inputtedAmount:F2} to Id: {inputtedAccount}.");
-        Console.WriteLine($"New Balance of ${controller.CheckBalance():F2}");
+        //Console.WriteLine($"New Balance of ${controller.TryCheckBalance():F2}");
+    }
+
+    public void Handle(BankController managerController)
+    {
+        throw new NotImplementedException();
     }
 }

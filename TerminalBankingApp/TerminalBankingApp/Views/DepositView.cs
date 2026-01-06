@@ -1,9 +1,10 @@
 ﻿using TerminalBankingApp.Controllers;
 using TerminalBankingApp.Utils;
+using TerminalBankingApp.Views.Interfaces;
 
 namespace TerminalBankingApp.Views;
 
-public class DepositView
+public class DepositView : IViewable
 {
     public static void Deposit()
     {
@@ -31,17 +32,21 @@ public class DepositView
                 return;
             }
 
-            controller.SetAccount(inputtedAccount);
-            isValid = controller.MakeDeposit((decimal)inputtedAmount);
+            controller.TrySetAccount(inputtedAccount);
+            isValid = controller.TryMakeDeposit((decimal)inputtedAmount);
 
             if (!isValid)
             {
                 Console.WriteLine("Invalid input: Must have valid Id and positive money amount");
             }
-            
         }
         
         Console.WriteLine($"Successfully deposited ${inputtedAmount:F2} to Id: {inputtedAccount}.");
-        Console.WriteLine($"New Balance of ${controller.CheckBalance():F2}");
+        //Console.WriteLine($"New Balance of ${controller.TryCheckBalance():F2}");
+    }
+
+    public void Handle(BankController managerController)
+    {
+        throw new NotImplementedException();
     }
 }

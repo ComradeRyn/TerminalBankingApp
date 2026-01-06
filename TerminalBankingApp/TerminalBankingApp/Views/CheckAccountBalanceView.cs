@@ -1,9 +1,10 @@
 ﻿using TerminalBankingApp.Controllers;
 using TerminalBankingApp.Utils;
+using TerminalBankingApp.Views.Interfaces;
 
 namespace TerminalBankingApp.Views;
 
-public class CheckAccountBalanceViewer
+public class CheckAccountBalanceView : IViewable
 {
     public static void CheckAccountBalance()
     {
@@ -17,8 +18,8 @@ public class CheckAccountBalanceViewer
         while (accountBalance == -1)
         {
             inputtedAccount = Parse.Id();
-            controller.SetAccount(inputtedAccount);
-            accountBalance = controller.CheckBalance();
+            controller.TrySetAccount(inputtedAccount);
+            //accountBalance = controller.TryCheckBalance();
 
             if (inputtedAccount == "exit")
             {
@@ -27,5 +28,10 @@ public class CheckAccountBalanceViewer
         }
         
         Console.WriteLine($"Account with Id: {inputtedAccount} has a balance of ${accountBalance:F2}");
+    }
+
+    public void Handle(BankController managerController)
+    {
+        throw new NotImplementedException();
     }
 }

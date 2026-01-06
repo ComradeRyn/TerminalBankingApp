@@ -1,9 +1,10 @@
 ﻿using TerminalBankingApp.Controllers;
 using TerminalBankingApp.Utils;
+using TerminalBankingApp.Views.Interfaces;
 
 namespace TerminalBankingApp.Views;
 
-public class TransferFundsView
+public class TransferFundsView : IViewable
 {
     public static void TransferFunds()
     {
@@ -40,8 +41,8 @@ public class TransferFundsView
                 return;
             }
 
-            controller.SetAccount(inputtedSender);
-            isValid = controller.MakeTransfer(inputtedReceiver, (decimal)inputtedAmount);
+            controller.TrySetAccount(inputtedSender);
+            isValid = controller.TryMakeTransfer(inputtedReceiver, (decimal)inputtedAmount);
 
             if (!isValid)
             {
@@ -50,5 +51,10 @@ public class TransferFundsView
         }
         
         Console.WriteLine($"Successfully transferred ${inputtedAmount:F2} to from Id: {inputtedSender} to Id:{inputtedReceiver}.");
+    }
+
+    public void Handle(BankController managerController)
+    {
+        throw new NotImplementedException();
     }
 }
