@@ -1,6 +1,4 @@
-﻿using TerminalBankingApp.Controllers;
-
-namespace TerminalBankingApp.Views;
+﻿namespace TerminalBankingApp.Views;
 
 public class CreateAccountView
 {
