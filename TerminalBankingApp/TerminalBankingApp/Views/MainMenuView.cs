@@ -12,18 +12,9 @@ public class MainMenuView : IViewable
      * Is it appropriate to use classes that exist within the Controllers folder in other classes within the same folder? (ex: using the AccountManagerController within the AccountController)
      * Should input validation be done in the controller or within the view before passing to controller
      */
-
-    public static readonly BankController ManagerController = new BankController();
-
-    public static void Run()
+    
+    public void Handle(BankController managerController)
     {
-        Console.WriteLine(
-            "\nWelcome to my Terminal Banking App! Please select one of the following numbers for the corresponding option:");
-
-        var continueRunning = true;
-
-        //do
-        //{
         Console.WriteLine(@"
             1: Create Account 
             2: Make a Deposit 
@@ -31,43 +22,6 @@ public class MainMenuView : IViewable
             4: Check an account balance 
             5: Transfer Funds 
             9: exit");
-
-        var input = Console.ReadLine();
-
-        //     switch (input)
-        //     {
-        //         case "1":
-        //             CreateAccountView.CreateAccount();
-        //             break;
-        //         case "2":
-        //             DepositView.Deposit();
-        //             break;
-        //         case "3":
-        //             WithdrawView.Withdraw();
-        //             break;
-        //         case "4":
-        //            CheckAccountBalanceViewer.CheckAccountBalance();
-        //             break;
-        //         case "5":
-        //             TransferFundsView.TransferFunds();
-        //             break;
-        //         case "9":
-        //             Console.WriteLine("Exit Confirmed: Have a nice day!");
-        //             continueRunning = false;
-        //             break;
-        //         default:
-        //             Console.WriteLine("Not a valid command");
-        //             break;
-        //     }
-        // } while (continueRunning);
-        //}
-
-        
-    }
-    
-    public void Handle(BankController managerController)
-    {
-        throw new NotImplementedException();
     }
 }
 

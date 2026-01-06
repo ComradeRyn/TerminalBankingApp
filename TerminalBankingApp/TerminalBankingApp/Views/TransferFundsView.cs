@@ -10,7 +10,7 @@ public class TransferFundsView : IViewable
     {
         Console.WriteLine("Type \"exit\" to return to main menu");
         var isValid = false;
-
+    
         var inputtedReceiver = "";
         var inputtedSender = "";
         var inputtedAmount = (decimal?)null;
@@ -40,10 +40,10 @@ public class TransferFundsView : IViewable
             {
                 return;
             }
-
+    
             controller.TrySetAccount(inputtedSender);
             isValid = controller.TryMakeTransfer(inputtedReceiver, (decimal)inputtedAmount);
-
+    
             if (!isValid)
             {
                 Console.WriteLine("Invalid input: Ids must be valid, with a positive money amount, less than the balance of the sender.");

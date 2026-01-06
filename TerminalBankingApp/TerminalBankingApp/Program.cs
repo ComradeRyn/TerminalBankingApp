@@ -1,5 +1,6 @@
 ﻿using TerminalBankingApp.Views;
 using TerminalBankingApp.Controllers;
+using TerminalBankingApp.Views.Interfaces;
 
 MainMenuView.Run();
 
@@ -18,11 +19,14 @@ MainMenuView.Run();
  * 
  */
 
-var views = new IViewable[] {new MainMenuView(), new CreateAccountView(), new WithdrawView(), new CheckAccountBalanceView(), new TransferFundsView()};
+var views = new IViewable[] {new MainMenuView(), new CreateAccountView(), new DepositView(), new WithdrawView(), new CheckAccountBalanceView(), new TransferFundsView()};
 var managerController = new BankController();
 
 var isRunning = true;
 var viewSelection = 0;
+
+Console.WriteLine(
+    "\nWelcome to my Terminal Banking App! Please select one of the following numbers for the corresponding option:");
 
 while (isRunning)
 {
@@ -37,6 +41,7 @@ while (isRunning)
     
     try
     {
+        Console.WriteLine("Type \"exit\" to return to main menu");
         views[viewSelection].Handle(managerController);
     }
 

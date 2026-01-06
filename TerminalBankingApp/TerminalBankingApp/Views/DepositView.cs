@@ -1,4 +1,5 @@
 ﻿using TerminalBankingApp.Controllers;
+using TerminalBankingApp.Models;
 using TerminalBankingApp.Utils;
 using TerminalBankingApp.Views.Interfaces;
 
@@ -6,47 +7,47 @@ namespace TerminalBankingApp.Views;
 
 public class DepositView : IViewable
 {
-    public static void Deposit()
+    public void Handle(BankController bankController)
     {
-        Console.WriteLine("Type \"exit\" to return to main menu");
+        var isSuccessful = false;
 
-        var controller = new AccountController(MainMenuView.ManagerController);
-        
-        var isValid = false;
-
-        var inputtedAccount = "";
-        var inputtedAmount = (decimal?)null;
-        
-        while (!isValid)
+        while (!isSuccessful)
         {
-            inputtedAccount = Parse.Id();
-            
+            var inputtedAccount = Parse.Id();
+
             if (inputtedAccount == "exit")
             {
                 return;
             }
-            
-            inputtedAmount = Parse.Amount();
+
+            IAccountController selectedAccount;
+
+            if (!bankController.TryGetAccount(inputtedAccount, out selectedAccount))
+            {
+                Console.WriteLine("Invalid account Id");
+                continue;
+            }
+
+            var inputtedAmount = Parse.Amount();
+
             if (inputtedAmount == null)
             {
                 return;
             }
 
-            controller.TrySetAccount(inputtedAccount);
-            isValid = controller.TryMakeDeposit((decimal)inputtedAmount);
-
-            if (!isValid)
+            if (inputtedAmount == -1)
             {
-                Console.WriteLine("Invalid input: Must have valid Id and positive money amount");
+                Console.WriteLine("Must enter positive money amount");
+                continue;
+            }
+
+            isSuccessful = selectedAccount.TryMakeDeposit((decimal)inputtedAmount);
+
+            if (isSuccessful)
+            {
+                Console.WriteLine($"Successfully deposited ${inputtedAmount:F2} to Id: {inputtedAccount}.");
             }
         }
-        
-        Console.WriteLine($"Successfully deposited ${inputtedAmount:F2} to Id: {inputtedAccount}.");
-        //Console.WriteLine($"New Balance of ${controller.TryCheckBalance():F2}");
     }
-
-    public void Handle(BankController managerController)
-    {
-        throw new NotImplementedException();
-    }
+    
 }

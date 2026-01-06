@@ -1,12 +1,11 @@
 ﻿using TerminalBankingApp.Views.Interfaces;
+using TerminalBankingApp.Controllers;
 
 namespace TerminalBankingApp.Views;
 
-using TerminalBankingApp.Controllers;
-
 public class CreateAccountView : IViewable
 {
-    public void Handle(BankController accountController)
+    public void Handle(BankController bankController)
     {
         Console.WriteLine("Accounts names must be of the structure <first name> <second name> ... <last name> with only letters");
         var isSuccessful = false;
@@ -22,7 +21,7 @@ public class CreateAccountView : IViewable
                 return;
             }
 
-            isSuccessful = accountController.TryCreateAccount(inputtedName, out newAccountId);
+            isSuccessful = bankController.TryCreateAccount(inputtedName, out newAccountId);
 
             if (isSuccessful)
             {
