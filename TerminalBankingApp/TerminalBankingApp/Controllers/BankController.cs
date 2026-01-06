@@ -23,7 +23,11 @@ public class BankController
 
     public bool TryGetAccount(string? id, out IAccountController value)
     {
-        if (id != null) return _bank.Accounts.TryGetValue(id, out value);
+        if (id != null && _bank.Accounts.TryGetValue(id, out value))
+        {
+            return true;
+        }
+
         value = new AccountController(null);
         return false;
     }

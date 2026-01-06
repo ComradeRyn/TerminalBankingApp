@@ -14,13 +14,12 @@ public class DepositView : IViewable
         while (!isSuccessful)
         {
             var inputtedAccount = Parse.Id();
+            IAccountController selectedAccount;
 
             if (inputtedAccount == "exit")
             {
                 return;
             }
-
-            IAccountController selectedAccount;
 
             if (!bankController.TryGetAccount(inputtedAccount, out selectedAccount))
             {

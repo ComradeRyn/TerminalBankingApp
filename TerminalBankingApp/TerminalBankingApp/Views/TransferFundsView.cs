@@ -6,6 +6,7 @@ namespace TerminalBankingApp.Views;
 
 public class TransferFundsView : IViewable
 {
+    /*
     public static void TransferFunds()
     {
         Console.WriteLine("Type \"exit\" to return to main menu");
@@ -52,6 +53,7 @@ public class TransferFundsView : IViewable
         
         Console.WriteLine($"Successfully transferred ${inputtedAmount:F2} to from Id: {inputtedSender} to Id:{inputtedReceiver}.");
     }
+    */
 
     public void Handle(BankController managerController)
     {

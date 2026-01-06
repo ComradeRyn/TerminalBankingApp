@@ -2,8 +2,6 @@
 using TerminalBankingApp.Controllers;
 using TerminalBankingApp.Views.Interfaces;
 
-MainMenuView.Run();
-
 /* Things to do:
  * - Implement IViewable
  *      - handle()

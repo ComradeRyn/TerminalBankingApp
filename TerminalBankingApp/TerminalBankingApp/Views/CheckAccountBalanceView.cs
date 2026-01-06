@@ -15,17 +15,16 @@ public class CheckAccountBalanceView : IViewable
         while (!isSuccesful)
         {
             var inputtedId = Parse.Id();
-            
-            IAccountController account;
-            decimal balance;
 
-            bankController.TryGetAccount(inputtedId, out account);
-            isSuccesful = account.TryCheckBalance(out balance);
-
-            if (!isSuccesful)
+            if (inputtedId == "exit")
             {
-                Console.WriteLine("Invalid account Id");
+                return;
             }
+
+            bankController.TryGetAccount(inputtedId, out var account);
+            isSuccesful = account.TryCheckBalance(out var balance);
+
+            Console.WriteLine(isSuccesful ? $"Account {inputtedId} has a balance of ${balance}" : "Invalid account Id");
         }
     }
 }
