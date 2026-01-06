@@ -4,14 +4,19 @@ namespace TerminalBankingApp.Views;
 
 public static class MainMenuView
 {
-    // TODO: Switch out the uses of the AccountController with the AccountManagerController
-    // TODO: Check on naming conventions and syntax
-    // will need to make different instances of AccountControllers within each call to allow access to the controllers
+    /* General Questions:
+     * Are my method names within the view classes currently appropriate in this context?
+     * Should each of the view classes be static because they are never instantiated and only going to be called within this class?
+     * Is it appropriate to have the instance 'managerController' as static? Current reasoning is there will only ever exist one, and it is required in the AccountController, so I just access directly in each of the child classes
+     * Was told about the 'Try' naming convention, what does it mean, and how should I apply it?
+     * Is it appropriate to use classes that exist within the Controllers folder in other classes within the same folder? (ex: using the AccountManagerController within the AccountController)
+     * Would it make sense to move the View helper functions out of the MainMenu class and into their own utilities class?
+     */
     
-    //public static AccountController Controller = new AccountController();
-    public static AccountManagerController ManagerController = new AccountManagerController();
+    // Cannot be var, is this fine?
+    public static readonly AccountManagerController ManagerController = new AccountManagerController();
     
-    public static void Start()
+    public static void Run()
     {
         Console.WriteLine("\nWelcome to my Terminal Banking App! Please select one of the following numbers for the corresponding option:");
 

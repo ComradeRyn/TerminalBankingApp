@@ -1,5 +1,4 @@
 ﻿using TerminalBankingApp.Controllers;
-using TerminalBankingApp.Models;
 
 namespace TerminalBankingApp.Views;
 

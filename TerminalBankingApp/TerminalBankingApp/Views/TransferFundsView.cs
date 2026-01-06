@@ -12,6 +12,7 @@ public class TransferFundsView
         var inputtedReceiver = "";
         var inputtedSender = "";
         var inputtedAmount = (decimal?)null;
+        
         var controller = new AccountController(MainMenuView.ManagerController);
         
         while (!isValid)

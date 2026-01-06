@@ -5,8 +5,9 @@ namespace TerminalBankingApp.Controllers;
 public class AccountController
 {
     private Account? _account;
-    private AccountManagerController _accountManagerController;
+    private readonly AccountManagerController _accountManagerController;
 
+    // Does it make more sense to pass in a controller and call the method on the controller her, or does it make sense to just pass in an account
     public AccountController(string? id, AccountManagerController accountManagerController)
     {
         _account = accountManagerController.GetAccount(id);
@@ -18,15 +19,10 @@ public class AccountController
         _account = null;
         _accountManagerController = accountManagerController;
     }
-
-    public bool CheckAccountNull() 
-        => _account == null;
     
-    // Was told about a Try syntax
-    public bool SetAccount(string? id)
+    public void SetAccount(string? id)
     {
         _account = _accountManagerController.GetAccount(id);
-        return _account != null;
     }
     
     public bool MakeDeposit(decimal amount)
@@ -54,7 +50,6 @@ public class AccountController
 
         return false;
     }
-    
     
     public decimal CheckBalance()
     {

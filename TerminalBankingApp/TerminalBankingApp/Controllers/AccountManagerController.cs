@@ -4,13 +4,8 @@ namespace TerminalBankingApp.Controllers;
 
 public class AccountManagerController
 {
-    private AccountManager _accountManager;
-    
-    public AccountManagerController()
-    {
-        _accountManager = new AccountManager();
-    }
-    
+    private readonly AccountManager _accountManager = new();
+
     public string? CreateAccount(string name)
     {
         if (!ValidateName(name))
