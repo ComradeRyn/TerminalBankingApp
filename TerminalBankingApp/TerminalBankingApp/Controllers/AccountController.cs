@@ -2,52 +2,52 @@
 
 namespace TerminalBankingApp.Controllers;
 
-public class AccountController(Account? account) : IAccountController
+public class AccountController(Account account) : IAccountController
 {
-    public Account? Account { private get; set; } = account;
+    // Don't allow the account to be nullable, so you can remove the null checks
+    public Account Account { private get; init; } = account;
 
     public bool TryMakeDeposit(decimal amount)
     {
-        if (Account == null || amount <= 0) return false;
-        return TryUpdateBalance(amount);
+        if (amount > 0)
+        {
+            Account.Balance += amount;
+            
+            return true;
+        }
+
+        return false;
     }
 
     public bool TryMakeWithdraw(decimal amount)
     {
-        if (Account == null || amount <= 0 || amount > Account.Balance) return false;
-        return TryUpdateBalance(amount * -1);
+        if (amount > 0 && amount <= Account.Balance)
+        {
+            Account.Balance -= amount;
+            
+            return true;
+        }
+        
+        return false;
     }
 
     public bool TryMakeTransfer(IAccountController receiving, decimal amount)
     {
-        if (!TryMakeWithdraw(amount)) return false;
-        if (receiving.TryMakeDeposit(amount))
+        if (!TryMakeWithdraw(amount))
         {
-            return true;
+            return false;
         }
-
-        TryMakeDeposit(amount);
-
-        return false;
-    }
-    
-    public bool TryCheckBalance(out decimal balance)
-    {
-        if (Account == null)
+        
+        if (!receiving.TryMakeDeposit(amount))
         {
-            balance = -1;
+            TryMakeDeposit(amount);
+
             return false;
         }
 
-        balance = Account.Balance;
         return true;
     }
     
-    private bool TryUpdateBalance(decimal amount)
-    {
-        if (Account == null) return false;
-        Account.Balance += amount;
-
-        return true;
-    }
+    public decimal CheckBalance()
+        => Account.Balance;
 }

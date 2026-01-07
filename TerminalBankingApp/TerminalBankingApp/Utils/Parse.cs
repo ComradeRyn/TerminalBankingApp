@@ -10,20 +10,12 @@ public static class Parse
         return inputtedId;
     }
 
-    public static decimal? Amount()
+    public static decimal Amount()
     {
-        decimal amount;
-
         Console.Write("Enter a money amount: ");
-        
         var inputtedAmount = Console.ReadLine();
         
-        if (inputtedAmount == "exit")
-        {
-            return null;
-        }
-        
-        if(!decimal.TryParse(inputtedAmount, out amount))
+        if(!decimal.TryParse(inputtedAmount, out var amount))
         {
             return -1;
         }

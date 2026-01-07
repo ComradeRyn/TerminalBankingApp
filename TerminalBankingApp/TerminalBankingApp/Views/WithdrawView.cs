@@ -1,5 +1,4 @@
 ﻿using TerminalBankingApp.Controllers;
-using TerminalBankingApp.Models;
 using TerminalBankingApp.Utils;
 using TerminalBankingApp.Views.Interfaces;
 
@@ -9,41 +8,35 @@ public class WithdrawView : IViewable
 {
     public void Handle(BankController bankController)
     {
-        Console.WriteLine("Type \"exit\" to return to main menu");
-        var isSuccessful = false;
-
-        while (!isSuccessful)
+        var inputtedId = Parse.Id();
+        if (!bankController.TryGetAccount(inputtedId, out var accountController))
         {
-            var inputtedId = Parse.Id();
+            Console.WriteLine(Responses.InvalidId);
 
-            if (inputtedId == "exit")
-            {
-                return;
-            }
-            
-            if (!bankController.TryGetAccount(inputtedId, out var accountController))
-            {
-                Console.WriteLine("Invalid account Id");
-                continue;
-            }
-
-            var inputtedAmount = Parse.Amount();
-
-            if (inputtedAmount == null)
-            {
-                return;
-            }
-
-            isSuccessful = accountController.TryMakeWithdraw((decimal)inputtedAmount);
-
-            Console.WriteLine(isSuccessful
-                ? $"Successfully withdrew ${inputtedAmount:F2} to Id: {inputtedId}"
-                : $"{Responses.nonNegative} and {Responses.lessThanBalance}");
+            return;
         }
+
+        var inputtedAmount = Parse.Amount();
+        if (inputtedAmount < 0)
+        {
+            Console.WriteLine(Responses.NonNegative);
+
+            return;
+        }
+
+        if (!accountController!.TryMakeWithdraw(inputtedAmount))
+        {
+            Console.WriteLine(Responses.LessThanBalance);
+
+            return;
+        }
+        
+        Success(inputtedAmount);
     }
 
     public string GetActionName()
-    {
-        return "Make a Withdraw";
-    }
+        => "Make a Withdraw";
+
+    private void Success(decimal inputtedAmount)
+        => Console.WriteLine($"Successfully withdrew ${inputtedAmount:F2}");
 }

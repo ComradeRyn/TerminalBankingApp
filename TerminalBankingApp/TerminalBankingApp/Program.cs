@@ -7,7 +7,8 @@ var views = new IViewable[] {
     new DepositView(), 
     new WithdrawView(), 
     new CheckAccountBalanceView(), 
-    new TransferFundsView()};
+    new TransferFundsView()
+};
 
 var managerController = new BankController();
 
@@ -18,29 +19,27 @@ Console.WriteLine(
 
 while (isRunning)
 {
-    var counter = 1;
-    foreach (var view in views)
+    for (var i = 0; i < views.Length; i++)
     {
-        Console.WriteLine($"{counter}: {view.GetActionName()}");
-        counter++;
+        Console.WriteLine($"{i + 1}: {views[i].GetActionName()}");
     }
-    Console.WriteLine($"{counter + 3}: exit");
+    Console.WriteLine("q: exit");
     
     var userInput = Console.ReadLine();
 
-    if (!int.TryParse(userInput, out var viewSelection) || viewSelection-- == 0)
+    if (!int.TryParse(userInput, out var viewSelection))
     {
         viewSelection = -1;
     }
     
     try
     {
-        views[viewSelection].Handle(managerController);
+        views[viewSelection - 1].Handle(managerController);
     }
 
     catch(IndexOutOfRangeException e)
     {
-        if (viewSelection == counter + 2)
+        if (userInput == "q")
         {
             isRunning = false;
             Console.WriteLine("Exit Confirmed: Have a nice day!");
@@ -51,7 +50,6 @@ while (isRunning)
             Console.WriteLine("Invalid input: Must choose input from menu options");
         }
     }
-    
 }
 
 

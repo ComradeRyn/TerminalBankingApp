@@ -8,5 +8,5 @@ public interface IAccountController
 
     public bool TryMakeTransfer(IAccountController receiving, decimal amount);
 
-    public bool TryCheckBalance(out decimal balance);
+    public decimal CheckBalance();
 }

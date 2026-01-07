@@ -2,7 +2,7 @@
 
 public class Bank
 {
-    public Dictionary<string, IAccountController> Accounts;
+    public readonly Dictionary<string, IAccountController> Accounts;
 
     public Bank()
     {

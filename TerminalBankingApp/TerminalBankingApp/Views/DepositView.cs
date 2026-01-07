@@ -1,5 +1,4 @@
 ﻿using TerminalBankingApp.Controllers;
-using TerminalBankingApp.Models;
 using TerminalBankingApp.Utils;
 using TerminalBankingApp.Views.Interfaces;
 
@@ -9,42 +8,28 @@ public class DepositView : IViewable
 {
     public void Handle(BankController bankController)
     {
-        Console.WriteLine("Type \"exit\" to return to main menu");
-        var isSuccessful = false;
-
-        while (!isSuccessful)
+        var inputtedAccount = Parse.Id();
+        if (!bankController.TryGetAccount(inputtedAccount, out var selectedAccount))
         {
-            var inputtedAccount = Parse.Id();
+            Console.WriteLine(Responses.InvalidId);
 
-            if (inputtedAccount == "exit")
-            {
-                return;
-            }
-
-            if (!bankController.TryGetAccount(inputtedAccount, out var selectedAccount))
-            {
-                Console.WriteLine(Responses.invalidId);
-                continue;
-            }
-
-            var inputtedAmount = Parse.Amount();
-
-            if (inputtedAmount == null)
-            {
-                return;
-            }
-
-            isSuccessful = selectedAccount.TryMakeDeposit((decimal)inputtedAmount);
-
-            Console.WriteLine(isSuccessful
-                ? $"Successfully deposited ${inputtedAmount:F2} to Id: {inputtedAccount}."
-                : Responses.nonNegative);
+            return;
         }
+
+        var inputtedAmount = Parse.Amount();
+        if (!selectedAccount!.TryMakeDeposit(inputtedAmount))
+        {
+            Console.WriteLine(Responses.NonNegative);
+
+            return;
+        }
+        
+        Success(inputtedAmount);
     }
     
     public string GetActionName()
-    {
-        return "Make a Deposit";
-    }
-    
+        => "Make a Deposit";
+
+    private void Success(decimal inputtedAmount)
+        => Console.WriteLine($"Successfully deposited ${inputtedAmount:F2}.");
 }

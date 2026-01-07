@@ -1,5 +1,4 @@
 ﻿using TerminalBankingApp.Controllers;
-using TerminalBankingApp.Models;
 using TerminalBankingApp.Utils;
 using TerminalBankingApp.Views.Interfaces;
 
@@ -10,28 +9,16 @@ public class CheckAccountBalanceView : IViewable
 
     public void Handle(BankController bankController)
     {
-        Console.WriteLine("Type \"exit\" to return to main menu");
-        
-        var isSuccessful = false;
-
-        while (!isSuccessful)
+        var inputtedId = Parse.Id();
+        if (bankController.TryGetAccount(inputtedId, out var account))
         {
-            var inputtedId = Parse.Id();
-
-            if (inputtedId == "exit")
-            {
-                return;
-            }
-
-            bankController.TryGetAccount(inputtedId, out var account);
-            isSuccessful = account.TryCheckBalance(out var balance);
-
-            Console.WriteLine(isSuccessful ? $"Account {inputtedId} has a balance of ${balance:F2}" : Responses.invalidId);
+            Console.WriteLine($"Account has a balance of ${account!.CheckBalance():F2}");
+            
+            return;
         }
+        
+        Console.WriteLine(Responses.InvalidId);
     }
 
-    public string GetActionName()
-    {
-        return "Check Account Balance";
-    }
+    public string GetActionName() => "Check Account Balance";
 }
